@@ -1,8 +1,9 @@
 import type { NextPage } from "next";
+import { BrandingNavbar } from "../components/navigation/BrandingNavbar";
 const Home: NextPage = () => {
   return (
     <>
-      <h1>hello world</h1>
+      <BrandingNavbar />
     </>
   );
 };
