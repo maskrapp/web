@@ -10,6 +10,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { ReactNode } from "react";
 
 const Links = ["Features", "Pricing", "Team"];
@@ -31,6 +32,7 @@ const NavLink = ({ children }: { children: ReactNode }) => (
 
 export const BrandingNavbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const router = useRouter();
 
   return (
     <>
@@ -56,15 +58,16 @@ export const BrandingNavbar = () => {
           </HStack>
           <Flex alignItems={"center"}>
             <Button
-              bgColor="green.200"
+              bgColor="green.600"
               _hover={{
-                bg: "green.300",
+                bg: "green.500",
               }}
               _active={{
-                bg: "green.300",
+                bg: "green.500",
               }}
+              onClick={() => router.push("/app")}
             >
-              Sign in
+              Open App
             </Button>
           </Flex>
         </Flex>
