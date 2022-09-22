@@ -17,8 +17,7 @@ import NextLink from "next/link";
 import { PropsWithChildren } from "react";
 import { IconType } from "react-icons";
 import { AiOutlineMail } from "react-icons/ai";
-import { FiHome, FiMenu, FiSettings } from "react-icons/fi";
-import { GrLogout } from "react-icons/gr";
+import { FiHome, FiLogOut, FiMenu, FiSettings } from "react-icons/fi";
 
 interface LinkItemProps {
   name: string;
@@ -77,34 +76,46 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       {...rest}
     >
       <Flex
+        height="100%"
         direction="column"
-        justifyContent={"space-between"}
+        justifyContent="space-between"
         alignContent="space-between"
       >
-        <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-          <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-            Maskr
-          </Text>
-          <CloseButton
-            display={{ base: "flex", md: "none" }}
-            onClick={onClose}
-          />
+        <Flex
+          direction="column"
+          justifyContent={"space-between"}
+          alignContent="space-between"
+        >
+          <Flex
+            h="20"
+            alignItems="center"
+            mx="8"
+            justifyContent="space-between"
+          >
+            <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
+              Maskr
+            </Text>
+            <CloseButton
+              display={{ base: "flex", md: "none" }}
+              onClick={onClose}
+            />
+          </Flex>
+          {LinkItems.map((link) => (
+            <NextLink key={link.name} href={link.path}>
+              <NavItem key={link.name} name={link.name} icon={link.icon} />
+            </NextLink>
+          ))}
         </Flex>
-        {LinkItems.map((link) => (
-          <NextLink key={link.name} href={link.path}>
-            <NavItem key={link.name} name={link.name} icon={link.icon} />
-          </NextLink>
-        ))}
         <NavItem
-          position={"absolute"}
           bottom={0}
           left={0}
-          w="85%"
-          _hover={{}}
+          mb="1.5"
           cursor="pointer"
-          bg="red"
+          _hover={{
+            bgColor: "red",
+          }}
           name="Logout"
-          icon={GrLogout}
+          icon={FiLogOut}
           onClick={() => {
             localStorage.removeItem("supabase.auth.token");
             window.location.replace("/");
