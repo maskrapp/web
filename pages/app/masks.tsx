@@ -1,24 +1,38 @@
-import { Box, Heading } from "@chakra-ui/react";
+import {
+  Heading,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from "@chakra-ui/react";
 import { NextPage } from "next";
 import { AuthWrapper } from "../../components/auth/AuthWrapper";
+import { Emails } from "../../components/dashboard/email/Emails";
 import { Masks } from "../../components/dashboard/Masks";
 import { DashboardNavigation } from "../../components/navigation/DashboardNavigation";
+import { useUser } from "../../context/UserContext";
 
 const MasksPage: NextPage = () => {
+  const { supabase } = useUser();
   return (
     <AuthWrapper>
       <DashboardNavigation>
         <Heading>Masks</Heading>
-        <Box
-          w={{
-            md: "100%",
-            sm: "100%",
-            lg: "65",
-            xl: "50%",
-          }}
-        >
-          <Masks />
-        </Box>
+        <Tabs isLazy>
+          <TabList>
+            <Tab>Masks</Tab>
+            <Tab>Emails</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <Masks />
+            </TabPanel>
+            <TabPanel>
+              <Emails supabaseClient={supabase} />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </DashboardNavigation>
     </AuthWrapper>
   );
