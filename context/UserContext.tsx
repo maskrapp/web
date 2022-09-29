@@ -1,6 +1,6 @@
 import { Session, SupabaseClient } from "@supabase/supabase-js";
 import { createContext, useContext, useEffect, useState } from "react";
-import { UserDetails } from "../types/user";
+import { UserDetails } from "../types";
 
 type UserContextType = {
   session: Session | null;
@@ -51,8 +51,6 @@ export const UserContextProvider = ({
         .single();
       if (response.status === 200) {
         setUserDetails(response.data);
-      } else {
-        console.log("postgrest error:", response);
       }
       setIsloadingData(false);
     };
