@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError } from "axios";
 import { APIResponse, Email } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
 import { ConfirmationModal } from "../ConfirmationModal";
@@ -98,10 +98,10 @@ const EmailEntry = ({ email, is_verified, is_primary }: EntryProps) => {
           isClosable: true,
         });
       },
-      onError: (data: AxiosResponse<APIResponse, any>) => {
+      onError: (data: AxiosError<APIResponse, any>) => {
         toast({
           title: "Error",
-          description: data.data?.message,
+          description: data.response?.data?.message,
           status: "error",
           position: "top",
           isClosable: true,
@@ -125,11 +125,10 @@ const EmailEntry = ({ email, is_verified, is_primary }: EntryProps) => {
           isClosable: true,
         });
       },
-      onError: (data: AxiosError) => {
-        const response = data.response as AxiosResponse<APIResponse, any>;
+      onError: (data: AxiosError<APIResponse>) => {
         toast({
           title: "Error",
-          description: response.data.message,
+          description: data.response?.data.message,
           status: "error",
           position: "top",
           isClosable: true,

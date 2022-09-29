@@ -15,9 +15,10 @@ import {
 } from "@chakra-ui/react";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError } from "axios";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { APIResponse } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
 
 interface Focusable {
@@ -70,10 +71,10 @@ export const EmailModal = ({ onClose, supabaseClient }: EmailModalProps) => {
         });
         queryClient.invalidateQueries(["emails"]);
       },
-      onError: (data: AxiosResponse<any, any>) => {
+      onError: (data: AxiosError<APIResponse, any>) => {
         toast({
           title: "Something went wrong!",
-          description: data.data,
+          description: data.response?.data?.message,
           status: "error",
           position: "top",
           isClosable: true,

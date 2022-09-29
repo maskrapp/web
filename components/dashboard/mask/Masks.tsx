@@ -19,9 +19,9 @@ import {
 } from "@chakra-ui/react";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-import { Mask } from "../../../types";
+import { APIResponse, Mask } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
 import { ConfirmationModal } from "../ConfirmationModal";
 import { CreateMaskModal } from "./CreateMaskModal";
@@ -184,12 +184,20 @@ const MaskEntrySwitch = ({ enabled, mask }: Omit<MaskEntryProps, "email">) => {
     value: boolean;
     mask: string;
   }
+  const toast = useToast();
   const { mutate } = useMutation(
     (args: Args) => {
       return makeUpdateStatusRequest(args.value, args.mask);
     },
     {
-      onError: () => {
+      onError: (data: AxiosError<APIResponse, any>) => {
+        toast({
+          title: "Error",
+          description: data.response?.data?.message,
+          status: "error",
+          position: "top",
+          isClosable: true,
+        });
         setValue(!value);
       },
     }

@@ -16,10 +16,10 @@ import {
 } from "@chakra-ui/react";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
-import { Email } from "../../../types";
+import { APIResponse, Email } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
 
 interface Props {
@@ -79,9 +79,10 @@ export const CreateMaskModal = ({ onClose, supabaseClient }: Props) => {
         queryClient.invalidateQueries(["masks"]);
       },
 
-      onError: () => {
+      onError: (data: AxiosError<APIResponse, any>) => {
         toast({
           title: "Error",
+          description: data.response?.data?.message,
           status: "error",
           position: "top",
         });
