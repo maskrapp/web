@@ -17,7 +17,7 @@ import NextLink from "next/link";
 import { PropsWithChildren } from "react";
 import { IconType } from "react-icons";
 import { AiOutlineMail } from "react-icons/ai";
-import { FiHome, FiLogOut, FiMenu, FiSettings } from "react-icons/fi";
+import { FiLogOut, FiMenu, FiSettings } from "react-icons/fi";
 
 interface LinkItemProps {
   name: string;
@@ -25,8 +25,7 @@ interface LinkItemProps {
   icon: IconType;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: "Home", path: "/app", icon: FiHome },
-  { name: "Mail Masks", path: "/app/masks", icon: AiOutlineMail },
+  { name: "Masks", path: "/app", icon: AiOutlineMail },
   { name: "Settings", path: "/app/settings", icon: FiSettings },
 ];
 
@@ -130,13 +129,10 @@ interface NavItemProps extends FlexProps {
   icon: IconType;
   name: string;
 }
+
 const NavItem = ({ icon, name, ...rest }: NavItemProps) => {
   return (
-    <Link
-      href="#"
-      style={{ textDecoration: "none" }}
-      _focus={{ boxShadow: "none" }}
-    >
+    <Link style={{ textDecoration: "none" }} _focus={{ boxShadow: "none" }}>
       <Flex
         align="center"
         p="4"
