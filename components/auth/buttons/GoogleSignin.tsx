@@ -1,6 +1,7 @@
-import { Button } from "@chakra-ui/react";
+import { Button, Center, Text } from "@chakra-ui/react";
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { FcGoogle } from "react-icons/fc";
 import { useUser } from "../../../context/UserContext";
 import { TokenPair } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
@@ -40,5 +41,17 @@ const Signin = () => {
       console.log("Google Login error:", err);
     },
   });
-  return <Button onClick={() => login()}>Sign in with Google</Button>;
+  return (
+    <Button
+      w={"full"}
+      maxW={"md"}
+      variant={"outline"}
+      leftIcon={<FcGoogle />}
+      onClick={() => login()}
+    >
+      <Center>
+        <Text>Sign in with Google</Text>
+      </Center>
+    </Button>
+  );
 };

@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Center,
   Checkbox,
   Divider,
   Flex,
@@ -16,7 +15,6 @@ import {
 } from "@chakra-ui/react";
 
 import { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
 import { GoogleSignin } from "./buttons/GoogleSignin";
 import { ForgotPasswordForm } from "./ForgotPassword";
 
@@ -80,16 +78,7 @@ export const Signin = () => {
                 </Button>
               </Stack>
               <Divider />
-              <Button
-                w={"full"}
-                maxW={"md"}
-                variant={"outline"}
-                leftIcon={<FcGoogle />}
-              >
-                <Center>
-                  <Text>Sign in with Google</Text>
-                </Center>
-              </Button>
+
               <GoogleSignin />
             </Stack>
           </Box>
