@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
+import { useAxios } from "../../../hooks/useAxios";
 import { APIResponse, Email } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
 import { ConfirmationModal } from "../ConfirmationModal";
@@ -25,9 +26,12 @@ import { EmailModal } from "./EmailModal";
 
 export const Emails = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const axios = useAxios();
 
   const fetchEmails = async () => {
-    return [];
+    const response = await axios.post<Email[]>("/api/user/emails");
+    console.log(response);
+    return response.data ?? [];
   };
   const query = useQuery<Email[], Error>(["emails"], fetchEmails, {
     cacheTime: 3600,
