@@ -5,14 +5,14 @@ import { useUser } from "../../context/UserContext";
 
 const SignInPage: NextPage = () => {
   const router = useRouter();
-  const { isAuthenticated, supabase } = useUser();
+  const { isAuthenticated } = useUser();
   if (isAuthenticated) {
     router.push("/app");
     return null;
   }
   return (
     <>
-      <Signin supabaseClient={supabase} />
+      <Signin />
     </>
   );
 };

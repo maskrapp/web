@@ -20,3 +20,12 @@ export interface APIResponse {
   success: boolean;
   message?: string;
 }
+
+export interface Token {
+  token: string;
+  expires_at: number;
+}
+export interface TokenPair {
+  refresh_token: Token;
+  access_token: Token;
+}

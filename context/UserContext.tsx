@@ -1,70 +1,93 @@
-import { Session, SupabaseClient } from "@supabase/supabase-js";
-import { createContext, useContext, useEffect, useState } from "react";
-import { UserDetails } from "../types";
-
-type UserContextType = {
-  session: Session | null;
-  isLoading: boolean;
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { Token, TokenPair } from "../types";
+import { pairSchema } from "../utils/zod";
+interface UserContextType {
   isAuthenticated: boolean;
-  supabase: SupabaseClient;
-  userDetails: UserDetails | null;
-};
+  accessToken: Token | null;
+  refreshToken: Token | null;
+  actions: {
+    setAccessToken: (token: Token) => void;
+    setRefreshToken: (token: Token) => void;
+    signIn: (pair: TokenPair) => void;
+  };
+}
 
 export const UserContext = createContext<UserContextType | undefined>(
   undefined
 );
 
-export interface Props {
-  supabaseClient: SupabaseClient;
-}
+export const UserContextProvider = ({ children }: PropsWithChildren) => {
+  const [refreshToken, setRefreshToken] = useState<Token | null>(null);
+  const [accessToken, setAccessToken] = useState<Token | null>(null);
+  const [authenticated, setAuthenticated] = useState(false);
 
-export const UserContextProvider = ({
-  supabaseClient,
-  children,
-}: React.PropsWithChildren<Props>) => {
-  const [isLoadingData, setIsloadingData] = useState(false);
-  const [session, setSession] = useState<Session | null>(
-    supabaseClient.auth.session()
-  );
-  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
+  const signOut = () => {
+    setAccessToken(null);
+    setRefreshToken(null);
+    setAuthenticated(false);
+  };
   useEffect(() => {
-    const { data } = supabaseClient.auth.onAuthStateChange((ev, session) => {
-      setSession(session);
-    });
     window.onstorage = (e) => {
-      if (e.key === "supabase.auth.token") {
-        const newSession = JSON.parse(e.newValue ?? "{}");
-        setSession(newSession?.currentSession);
+      try {
+        if (e.key === "tokens") {
+          if (!e.newValue) signOut();
+          const data: TokenPair = JSON.parse(e.newValue ?? "{}");
+          const { success } = pairSchema.safeParse(data);
+          if (success) {
+            setRefreshToken(data.refresh_token);
+            setAccessToken(data.access_token);
+            setAuthenticated(true);
+          } else {
+            signOut();
+          }
+        }
+      } catch {
+        signOut();
       }
     };
     return () => {
-      data?.unsubscribe();
+      window.onstorage = null;
     };
   }, []);
 
   useEffect(() => {
-    const getUserDetails = async () => {
-      setIsloadingData(true);
-      const response = await supabaseClient
-        .from<UserDetails>("users")
-        .select("*")
-        .single();
-      if (response.status === 200) {
-        setUserDetails(response.data);
+    const tokens = localStorage.getItem("tokens");
+    if (!tokens) return;
+    try {
+      const data: TokenPair = JSON.parse(tokens);
+      const { success } = pairSchema.safeParse(data);
+      if (success) {
+        setRefreshToken(data.refresh_token);
+        setAccessToken(data.access_token);
+        setAuthenticated(true);
       }
-      setIsloadingData(false);
-    };
-    getUserDetails();
+    } catch {}
   }, []);
 
-  const value = {
-    isAuthenticated: !!session?.user,
-    session: session,
-    isLoading: isLoadingData,
-    supabase: supabaseClient,
-    userDetails: userDetails,
-  } as UserContextType;
-
+  const value: UserContextType = {
+    isAuthenticated: authenticated,
+    accessToken: accessToken,
+    refreshToken: refreshToken,
+    actions: {
+      setAccessToken: (token) => {
+        setAccessToken(token);
+      },
+      setRefreshToken: (token) => {
+        setRefreshToken(token);
+      },
+      signIn: (pair) => {
+        setAccessToken(pair.access_token);
+        setRefreshToken(pair.refresh_token);
+        setAuthenticated(true);
+      },
+    },
+  };
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
 

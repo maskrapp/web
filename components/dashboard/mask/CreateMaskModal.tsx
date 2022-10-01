@@ -14,7 +14,6 @@ import {
   Select,
   useToast,
 } from "@chakra-ui/react";
-import { SupabaseClient } from "@supabase/supabase-js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { useRef } from "react";
@@ -24,7 +23,6 @@ import { BACKEND_URL } from "../../../utils/constants";
 
 interface Props {
   onClose: () => void;
-  supabaseClient: SupabaseClient;
 }
 
 interface FormValues {
@@ -33,7 +31,12 @@ interface FormValues {
   domain: string;
 }
 
-export const CreateMaskModal = ({ onClose, supabaseClient }: Props) => {
+const fetchEmails = () => {
+  const emails: Email[] = [];
+  return emails;
+};
+
+export const CreateMaskModal = ({ onClose }: Props) => {
   const {
     handleSubmit,
     register,
@@ -45,15 +48,7 @@ export const CreateMaskModal = ({ onClose, supabaseClient }: Props) => {
   const emailRef = useRef<HTMLSelectElement>(null);
   const domainRef = useRef<HTMLSelectElement>(null);
 
-  const emailQuery = useQuery(["emails"], async () => {
-    const { data, error } = await supabaseClient
-      .from<Email>("emails")
-      .select("email, is_primary, is_verified");
-    if (error) {
-      throw error;
-    }
-    return data ?? [];
-  });
+  const emailQuery = useQuery(["emails"], fetchEmails);
 
   const toast = useToast();
   const queryClient = useQueryClient();
@@ -104,13 +99,13 @@ export const CreateMaskModal = ({ onClose, supabaseClient }: Props) => {
         <ModalCloseButton />
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalBody pb={6}>
-            <FormControl isInvalid={false}>
+            <FormControl isInvalid={!!errors.name}>
               <FormLabel>Name</FormLabel>
               <Input
                 type="text"
                 {...register("name", {
                   pattern: new RegExp(
-                    "^(?=[a-zA-Z0-9._]{3,20}$)(?!.*[_.]{2})[^_.].*[^_.]$"
+                    "^(?=[a-zA-Z0-9._]{3,24}$)(?!.*[_.]{2})[^_.].*[^_.]$"
                   ),
                 })}
                 autoFocus

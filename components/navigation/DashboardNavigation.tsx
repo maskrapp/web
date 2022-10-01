@@ -116,7 +116,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
           name="Logout"
           icon={FiLogOut}
           onClick={() => {
-            localStorage.removeItem("supabase.auth.token");
+            localStorage.removeItem("tokens");
             window.location.replace("/");
           }}
         ></NavItem>

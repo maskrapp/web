@@ -17,7 +17,6 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { SupabaseClient } from "@supabase/supabase-js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
@@ -26,22 +25,11 @@ import { BACKEND_URL } from "../../../utils/constants";
 import { ConfirmationModal } from "../ConfirmationModal";
 import { CreateMaskModal } from "./CreateMaskModal";
 
-interface Props {
-  supabaseClient: SupabaseClient;
-}
-
-export const Masks = ({ supabaseClient }: Props) => {
+export const Masks = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const fetchMasks = async () => {
-    const result = await supabaseClient.from<Mask>("masks").select(`
-        mask,
-        enabled,
-        emails (
-          email
-        )
-      `);
-    return result.data ?? [];
+    return [];
   };
 
   const query = useQuery<Mask[], Error>(["masks"], fetchMasks, {
@@ -57,9 +45,7 @@ export const Masks = ({ supabaseClient }: Props) => {
       //   xl: "40%", // 80em+ // }}
       boxSize={"60%"}
     >
-      {isOpen && (
-        <CreateMaskModal onClose={onClose} supabaseClient={supabaseClient} />
-      )}
+      {isOpen && <CreateMaskModal onClose={onClose} />}
       <Button onClick={() => onOpen()}>Create Mask</Button>
       <Table variant="unstyled">
         <Thead>
@@ -208,7 +194,7 @@ const MaskEntrySwitch = ({ enabled, mask }: Omit<MaskEntryProps, "email">) => {
   return (
     <Switch
       isChecked={value}
-      onChange={(event) => {
+      onChange={(_) => {
         const newValue = !value;
         setValue(newValue);
         setTimeout(() => {

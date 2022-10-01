@@ -13,7 +13,6 @@ import {
   ModalOverlay,
   useToast,
 } from "@chakra-ui/react";
-import { SupabaseClient } from "@supabase/supabase-js";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import React from "react";
@@ -29,10 +28,9 @@ interface EmailModalProps {
   isOpen: boolean;
   onClose: () => void;
   finalRef?: React.RefObject<Focusable>;
-  supabaseClient: SupabaseClient;
 }
 
-export const EmailModal = ({ onClose, supabaseClient }: EmailModalProps) => {
+export const EmailModal = ({ onClose }: EmailModalProps) => {
   interface FormValues {
     email: string;
   }

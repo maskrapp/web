@@ -16,7 +16,6 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { SupabaseClient } from "@supabase/supabase-js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { APIResponse, Email } from "../../../types";
@@ -24,18 +23,11 @@ import { BACKEND_URL } from "../../../utils/constants";
 import { ConfirmationModal } from "../ConfirmationModal";
 import { EmailModal } from "./EmailModal";
 
-interface Props {
-  supabaseClient: SupabaseClient;
-}
-
-export const Emails = ({ supabaseClient }: Props) => {
+export const Emails = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const fetchEmails = async () => {
-    const result = await supabaseClient
-      .from<Email>("emails")
-      .select("email, is_primary, is_verified");
-    return result.data ?? [];
+    return [];
   };
   const query = useQuery<Email[], Error>(["emails"], fetchEmails, {
     cacheTime: 3600,
@@ -45,13 +37,7 @@ export const Emails = ({ supabaseClient }: Props) => {
   const emails = query.data;
   return (
     <TableContainer boxSize={"50%"}>
-      {isOpen && (
-        <EmailModal
-          isOpen={isOpen}
-          onClose={onClose}
-          supabaseClient={supabaseClient}
-        />
-      )}
+      {isOpen && <EmailModal isOpen={isOpen} onClose={onClose} />}
 
       <Button onClick={onOpen}>Add Email</Button>
       <Table variant="unstyled">
