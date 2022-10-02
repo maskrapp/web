@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Center,
   Checkbox,
   Divider,
   Flex,
@@ -14,17 +13,12 @@ import {
   Text,
   useColorModePreference,
 } from "@chakra-ui/react";
-import { SupabaseClient } from "@supabase/supabase-js";
 
 import { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
+import { GoogleSignin } from "./buttons/GoogleSignin";
 import { ForgotPasswordForm } from "./ForgotPassword";
 
-interface Props {
-  supabaseClient: SupabaseClient;
-}
-
-export const Signin = ({ supabaseClient }: Props) => {
+export const Signin = () => {
   const [forgotPassword, setForgotPassword] = useState(false);
   const color = useColorModePreference();
   if (!forgotPassword) {
@@ -84,24 +78,8 @@ export const Signin = ({ supabaseClient }: Props) => {
                 </Button>
               </Stack>
               <Divider />
-              <Button
-                w={"full"}
-                maxW={"md"}
-                variant={"outline"}
-                leftIcon={<FcGoogle />}
-                onClick={() =>
-                  supabaseClient.auth.signIn(
-                    {
-                      provider: "google",
-                    },
-                    { redirectTo: window.location.href }
-                  )
-                }
-              >
-                <Center>
-                  <Text>Sign in with Google</Text>
-                </Center>
-              </Button>
+
+              <GoogleSignin />
             </Stack>
           </Box>
         </Stack>

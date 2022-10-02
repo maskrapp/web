@@ -11,10 +11,8 @@ import { AuthWrapper } from "../../components/auth/AuthWrapper";
 import { Emails } from "../../components/dashboard/email/Emails";
 import { Masks } from "../../components/dashboard/mask/Masks";
 import { DashboardNavigation } from "../../components/navigation/DashboardNavigation";
-import { useUser } from "../../context/UserContext";
 
 const MasksPage: NextPage = () => {
-  const { supabase } = useUser();
   return (
     <AuthWrapper>
       <DashboardNavigation>
@@ -26,10 +24,10 @@ const MasksPage: NextPage = () => {
           </TabList>
           <TabPanels>
             <TabPanel>
-              <Masks supabaseClient={supabase} />
+              <Masks />
             </TabPanel>
             <TabPanel>
-              <Emails supabaseClient={supabase} />
+              <Emails />
             </TabPanel>
           </TabPanels>
         </Tabs>

@@ -14,7 +14,6 @@ import { useRouter } from "next/router";
 import { ReactNode } from "react";
 
 const Links = ["Features", "Pricing", "Team"];
-
 const NavLink = ({ children }: { children: ReactNode }) => (
   <Link
     px={2}

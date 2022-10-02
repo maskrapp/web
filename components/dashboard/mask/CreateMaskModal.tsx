@@ -14,17 +14,16 @@ import {
   Select,
   useToast,
 } from "@chakra-ui/react";
-import { SupabaseClient } from "@supabase/supabase-js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
+import { useAxios } from "../../../hooks/useAxios";
 import { APIResponse, Email } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
 
 interface Props {
   onClose: () => void;
-  supabaseClient: SupabaseClient;
 }
 
 interface FormValues {
@@ -32,8 +31,7 @@ interface FormValues {
   email: string;
   domain: string;
 }
-
-export const CreateMaskModal = ({ onClose, supabaseClient }: Props) => {
+export const CreateMaskModal = ({ onClose }: Props) => {
   const {
     handleSubmit,
     register,
@@ -46,27 +44,18 @@ export const CreateMaskModal = ({ onClose, supabaseClient }: Props) => {
   const domainRef = useRef<HTMLSelectElement>(null);
 
   const emailQuery = useQuery(["emails"], async () => {
-    const { data, error } = await supabaseClient
-      .from<Email>("emails")
-      .select("email, is_primary, is_verified");
-    if (error) {
-      throw error;
-    }
-    return data ?? [];
+    const response = await axios.post<Email[]>("/api/user/emails");
+    return response.data ?? [];
   });
 
   const toast = useToast();
   const queryClient = useQueryClient();
 
+  const axios = useAxios();
+
   const { mutate } = useMutation(
     (values: FormValues) => {
-      const jsonStr = localStorage.getItem("supabase.auth.token");
-      const data = JSON.parse(jsonStr ?? "{}");
-      return axios.post(`${BACKEND_URL}/api/user/add-mask`, values, {
-        headers: {
-          Authorization: data.currentSession.access_token,
-        },
-      });
+      return axios.post(`${BACKEND_URL}/api/user/add-mask`, values);
     },
     {
       onSuccess: () => {
@@ -104,13 +93,13 @@ export const CreateMaskModal = ({ onClose, supabaseClient }: Props) => {
         <ModalCloseButton />
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalBody pb={6}>
-            <FormControl isInvalid={false}>
+            <FormControl isInvalid={!!errors.name}>
               <FormLabel>Name</FormLabel>
               <Input
                 type="text"
                 {...register("name", {
                   pattern: new RegExp(
-                    "^(?=[a-zA-Z0-9._]{3,20}$)(?!.*[_.]{2})[^_.].*[^_.]$"
+                    "^(?=[a-zA-Z0-9._]{3,24}$)(?!.*[_.]{2})[^_.].*[^_.]$"
                   ),
                 })}
                 autoFocus
