@@ -18,25 +18,35 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
+import { useAxios } from "../../../hooks/useAxios";
 import { APIResponse, Mask } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
 import { ConfirmationModal } from "../ConfirmationModal";
 import { CreateMaskModal } from "./CreateMaskModal";
 
+interface MaskEntry {
+  mask: string;
+  email: string;
+  enabled: boolean;
+}
+
 export const Masks = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const axios = useAxios();
 
   const fetchMasks = async () => {
-    return [];
+    const response = await axios.post<MaskEntry[]>("/api/user/masks");
+    return response.data ?? [];
   };
 
-  const query = useQuery<Mask[], Error>(["masks"], fetchMasks, {
+  const query = useQuery<MaskEntry[], Error>(["masks"], fetchMasks, {
     cacheTime: 3600,
     refetchOnMount: false,
   });
   const masks = query.data ?? [];
+  console.log(masks);
 
   return (
     <TableContainer
@@ -61,7 +71,7 @@ export const Masks = () => {
             <MaskEntry
               key={mask.mask}
               mask={mask.mask}
-              email={mask.emails.email}
+              email={mask.email}
               enabled={mask.enabled}
             />
           ))}
@@ -79,14 +89,10 @@ interface MaskEntryProps {
 }
 
 const MaskEntry = ({ mask, email, enabled }: MaskEntryProps) => {
+  const axios = useAxios();
   const makeDeleteMaskRequest = (mask: string) => {
-    const jsonStr = localStorage.getItem("supabase.auth.token");
-    const data = JSON.parse(jsonStr ?? "{}");
     return axios.delete(`${BACKEND_URL}/api/user/delete-mask`, {
       data: { mask: mask },
-      headers: {
-        Authorization: data.currentSession.access_token,
-      },
     });
   };
 
@@ -149,21 +155,15 @@ const MaskEntry = ({ mask, email, enabled }: MaskEntryProps) => {
 const MaskEntrySwitch = ({ enabled, mask }: Omit<MaskEntryProps, "email">) => {
   const [value, setValue] = useState(enabled);
 
+  const axios = useAxios();
+
   const makeUpdateStatusRequest = (value: boolean, mask: string) => {
     const jsonStr = localStorage.getItem("supabase.auth.token");
     const data = JSON.parse(jsonStr ?? "{}");
-    return axios.put(
-      `${BACKEND_URL}/api/user/set-mask-status`,
-      {
-        mask,
-        value,
-      },
-      {
-        headers: {
-          Authorization: data.currentSession.access_token,
-        },
-      }
-    );
+    return axios.put(`${BACKEND_URL}/api/user/set-mask-status`, {
+      mask,
+      value,
+    });
   };
 
   interface Args {

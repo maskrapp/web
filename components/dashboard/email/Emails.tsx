@@ -17,7 +17,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import { AxiosError, AxiosInstance } from "axios";
 import { useAxios } from "../../../hooks/useAxios";
 import { APIResponse, Email } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
@@ -30,7 +30,6 @@ export const Emails = () => {
 
   const fetchEmails = async () => {
     const response = await axios.post<Email[]>("/api/user/emails");
-    console.log(response);
     return response.data ?? [];
   };
   const query = useQuery<Email[], Error>(["emails"], fetchEmails, {
@@ -76,8 +75,9 @@ interface EntryProps {
 const EmailEntry = ({ email, is_verified, is_primary }: EntryProps) => {
   const toast = useToast();
   const queryClient = useQueryClient();
+  const axios = useAxios();
   const requestLinkMutation = useMutation(
-    (email: string) => requestNewLink(email),
+    (email: string) => requestNewLink(axios, email),
     {
       onSuccess: (data) => {
         toast({
@@ -100,7 +100,7 @@ const EmailEntry = ({ email, is_verified, is_primary }: EntryProps) => {
     }
   );
   const deleteEmailMutation = useMutation(
-    (email: string) => deleteEmail(email),
+    (email: string) => deleteEmail(axios, email),
     {
       onSuccess: (_) => {
         const data: Email[] = queryClient.getQueryData(["emails"]) ?? [];
@@ -163,28 +163,17 @@ const EmailEntry = ({ email, is_verified, is_primary }: EntryProps) => {
   );
 };
 
-const requestNewLink = (email: string) => {
+const requestNewLink = (axios: AxiosInstance, email: string) => {
   const jsonStr = localStorage.getItem("supabase.auth.token");
   const data = JSON.parse(jsonStr ?? "{}");
-  return axios.post(
-    `${BACKEND_URL}/api/user/send-link`,
-    {
-      email,
-    },
-    {
-      headers: {
-        Authorization: data.currentSession.access_token,
-      },
-    }
-  );
+  return axios.post(`${BACKEND_URL}/api/user/send-link`, {
+    email,
+  });
 };
-const deleteEmail = (email: string) => {
+const deleteEmail = (axios: AxiosInstance, email: string) => {
   const jsonStr = localStorage.getItem("supabase.auth.token");
   const data = JSON.parse(jsonStr ?? "{}");
   return axios.delete(`${BACKEND_URL}/api/user/delete-email`, {
     data: { email },
-    headers: {
-      Authorization: data.currentSession.access_token,
-    },
   });
 };

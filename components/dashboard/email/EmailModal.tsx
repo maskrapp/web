@@ -14,9 +14,9 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
-import React from "react";
+import { AxiosError } from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useAxios } from "../../../hooks/useAxios";
 import { APIResponse } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
 
@@ -43,18 +43,10 @@ export const EmailModal = ({ onClose }: EmailModalProps) => {
 
   const toast = useToast();
 
+  const axios = useAxios();
   const makeEmailRequest = async (email: string) => {
     const jsonStr = localStorage.getItem("supabase.auth.token");
-    const data = JSON.parse(jsonStr ?? "{}");
-    return axios.post(
-      `${BACKEND_URL}/api/user/add-email`,
-      { email: email },
-      {
-        headers: {
-          Authorization: data.currentSession.access_token,
-        },
-      }
-    );
+    return axios.post(`${BACKEND_URL}/api/user/add-email`, { email: email });
   };
   const queryClient = useQueryClient();
   const { mutate, isError, isSuccess } = useMutation(

@@ -15,9 +15,10 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
+import { useAxios } from "../../../hooks/useAxios";
 import { APIResponse, Email } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
 
@@ -30,12 +31,6 @@ interface FormValues {
   email: string;
   domain: string;
 }
-
-const fetchEmails = () => {
-  const emails: Email[] = [];
-  return emails;
-};
-
 export const CreateMaskModal = ({ onClose }: Props) => {
   const {
     handleSubmit,
@@ -48,20 +43,19 @@ export const CreateMaskModal = ({ onClose }: Props) => {
   const emailRef = useRef<HTMLSelectElement>(null);
   const domainRef = useRef<HTMLSelectElement>(null);
 
-  const emailQuery = useQuery(["emails"], fetchEmails);
+  const emailQuery = useQuery(["emails"], async () => {
+    const response = await axios.post<Email[]>("/api/user/emails");
+    return response.data ?? [];
+  });
 
   const toast = useToast();
   const queryClient = useQueryClient();
 
+  const axios = useAxios();
+
   const { mutate } = useMutation(
     (values: FormValues) => {
-      const jsonStr = localStorage.getItem("supabase.auth.token");
-      const data = JSON.parse(jsonStr ?? "{}");
-      return axios.post(`${BACKEND_URL}/api/user/add-mask`, values, {
-        headers: {
-          Authorization: data.currentSession.access_token,
-        },
-      });
+      return axios.post(`${BACKEND_URL}/api/user/add-mask`, values);
     },
     {
       onSuccess: () => {
