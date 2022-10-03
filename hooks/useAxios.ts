@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import jwt_decode, { JwtPayload } from "jwt-decode";
+import jwt_decode, { InvalidTokenError, JwtPayload } from "jwt-decode";
 import { useUser } from "../context/UserContext";
 import { Token } from "../types";
 import { BACKEND_URL } from "../utils/constants";
@@ -17,10 +17,11 @@ export const useAxios = () => {
   });
 
   axiosInstance.interceptors.request.use(async (req) => {
-    const decoded = jwt_decode<JwtPayload>(accessToken?.token ?? "");
-    const isExpired = Date.now() / 1000 > (decoded.exp ?? 0);
-    if (!isExpired) return req;
     try {
+      const decoded = jwt_decode<JwtPayload>(accessToken?.token ?? "");
+      console.log("DECODED", decoded, accessToken);
+      const isExpired = Date.now() / 1000 > (decoded.exp ?? 0);
+      if (!isExpired) return req;
       const response = await axios.post(`${BACKEND_URL}/api/auth/refresh/`, {
         refresh_token: refreshToken?.token,
       });
@@ -41,6 +42,9 @@ export const useAxios = () => {
           localStorage.removeItem("tokens");
           window.location.reload();
         }
+      } else if (e instanceof InvalidTokenError) {
+        localStorage.removeItem("tokens");
+        window.location.reload();
       }
     }
   });
