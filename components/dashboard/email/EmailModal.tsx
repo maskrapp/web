@@ -45,7 +45,6 @@ export const EmailModal = ({ onClose }: EmailModalProps) => {
 
   const axios = useAxios();
   const makeEmailRequest = async (email: string) => {
-    const jsonStr = localStorage.getItem("supabase.auth.token");
     return axios.post(`${BACKEND_URL}/api/user/add-email`, { email: email });
   };
   const queryClient = useQueryClient();
