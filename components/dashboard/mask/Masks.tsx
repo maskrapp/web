@@ -46,14 +46,17 @@ export const Masks = () => {
     refetchOnMount: false,
   });
   const masks = query.data ?? [];
-  console.log(masks);
 
   return (
     <TableContainer
-      // boxSize={{ //   base: "100%", // 0-48em
-      //   md: "50%", // 48em-80em,
-      //   xl: "40%", // 80em+ // }}
-      boxSize={"60%"}
+      boxSize={{
+        base: "100%", // 0-48em
+        sm: "100%",
+        md: "100%", // 48em-80em,
+        lg: "100%",
+        xl: "80%", // 80em+ //
+        "2xl": "60%",
+      }}
     >
       {isOpen && <CreateMaskModal onClose={onClose} />}
       <Button onClick={() => onOpen()}>Create Mask</Button>
@@ -62,8 +65,7 @@ export const Masks = () => {
           <Tr>
             <Th>Mask</Th>
             <Th>Email</Th>
-            <Th>Status</Th>
-            <Th>Actions</Th>
+            <Th></Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -132,9 +134,9 @@ const MaskEntry = ({ mask, email, enabled }: MaskEntryProps) => {
       <Tr>
         <Td>{mask}</Td>
         <Td>{email}</Td>
-        <Td>
+        {/* <Td>
           <MaskEntrySwitch mask={mask} enabled={enabled} />
-        </Td>
+        </Td> */}
         <Td>
           <Menu>
             <MenuButton as={Button}>

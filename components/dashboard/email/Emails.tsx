@@ -13,6 +13,7 @@ import {
   Th,
   Thead,
   Tr,
+  useBreakpoint,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -36,10 +37,19 @@ export const Emails = () => {
     cacheTime: 3600,
     refetchOnMount: false,
   });
-
   const emails = query.data;
+  console.log(useBreakpoint());
+
   return (
-    <TableContainer boxSize={"50%"}>
+    <TableContainer
+      boxSize={{
+        base: "100%", // 0-48em
+        sm: "100%",
+        md: "100%", // 48em-80em,
+        lg: "70%",
+        xl: "45%", // 80em+ //
+      }}
+    >
       {isOpen && <EmailModal isOpen={isOpen} onClose={onClose} />}
 
       <Button onClick={onOpen}>Add Email</Button>
@@ -48,7 +58,7 @@ export const Emails = () => {
           <Tr>
             <Th>Email</Th>
             <Th>Status</Th>
-            <Th>Actions</Th>
+            <Th></Th>
           </Tr>
         </Thead>
         <Tbody>
