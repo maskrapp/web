@@ -81,6 +81,7 @@ export const CreateMaskModal = ({ onClose }: Props) => {
   );
 
   const onSubmit = (data: FormValues) => {
+    if (!data.name) return;
     mutate(data);
   };
   const name = watch("name");
