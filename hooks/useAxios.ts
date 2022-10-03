@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import jwt_decode, { JwtPayload } from "jwt-decode";
 import { useUser } from "../context/UserContext";
 import { Token } from "../types";
@@ -35,8 +35,13 @@ export const useAxios = () => {
       }
       return req;
     } catch (e) {
-      localStorage.removeItem("tokens");
-      window.location.reload();
+      if (e instanceof AxiosError) {
+        // only sign out when the refresh token has expired
+        if (e.response?.status === 401) {
+          localStorage.removeItem("tokens");
+          window.location.reload();
+        }
+      }
     }
   });
   return axiosInstance;
