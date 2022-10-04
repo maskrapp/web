@@ -47,7 +47,8 @@ export const Emails = () => {
         sm: "100%",
         md: "100%", // 48em-80em,
         lg: "70%",
-        xl: "45%", // 80em+ //
+        xl: "80%", // 80em+ //
+        "2xl": "60%",
       }}
     >
       {isOpen && <EmailModal isOpen={isOpen} onClose={onClose} />}

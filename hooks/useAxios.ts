@@ -34,7 +34,6 @@ export const useAxios = () => {
       if (req.headers) {
         req.headers.Authorization = `Bearer ${tokens?.access_token.token}`;
       }
-      return req;
     } catch (e) {
       if (e instanceof AxiosError) {
         // only sign out when the refresh token has expired
@@ -46,6 +45,8 @@ export const useAxios = () => {
         localStorage.removeItem("tokens");
         window.location.reload();
       }
+    } finally {
+      return req;
     }
   });
   return axiosInstance;
