@@ -12,12 +12,9 @@ const exchangeData = async (code: string) => {
 };
 
 export const GoogleSignin = () => {
+  const CLIENTID = process.env.NEXT_PUBLIC_GOOGLE_CLIENTID ?? "";
   return (
-    <GoogleOAuthProvider
-      clientId={
-        "900187075817-88osmcnnf42dqr54q5kk2t13ek20doai.apps.googleusercontent.com"
-      }
-    >
+    <GoogleOAuthProvider clientId={CLIENTID}>
       <Signin />
     </GoogleOAuthProvider>
   );
