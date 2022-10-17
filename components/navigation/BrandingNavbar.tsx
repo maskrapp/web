@@ -32,7 +32,6 @@ const NavLink = ({ children }: { children: ReactNode }) => (
 export const BrandingNavbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
-
   return (
     <>
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>

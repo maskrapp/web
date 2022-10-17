@@ -1,19 +1,22 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Button,
+  Flex,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   Switch,
   Table,
-  TableContainer,
   Tbody,
   Td,
+  Text,
   Tfoot,
   Th,
   Thead,
   Tr,
+  useColorModeValue,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -24,7 +27,6 @@ import { useAxios } from "../../../hooks/useAxios";
 import { APIResponse, Mask } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
 import { ConfirmationModal } from "../ConfirmationModal";
-import { CreateMaskModal } from "./CreateMaskModal";
 
 interface MaskEntry {
   mask: string;
@@ -32,8 +34,11 @@ interface MaskEntry {
   enabled: boolean;
 }
 
-export const Masks = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+interface Props {
+  openFn: () => void;
+}
+
+export const Masks = ({ openFn }: Props) => {
   const axios = useAxios();
 
   const fetchMasks = async () => {
@@ -46,41 +51,46 @@ export const Masks = () => {
     refetchOnMount: false,
   });
   const masks = query.data ?? [];
-
   return (
-    <TableContainer
-      boxSize={{
-        base: "100%", // 0-48em
-        sm: "100%",
-        md: "100%", // 48em-80em,
-        lg: "100%",
-        xl: "80%", // 80em+ //
-        "2xl": "60%",
-      }}
+    <Box
+      margin={"auto"}
+      maxW="100%"
+      mt="10"
+      pt="4"
+      pb="4"
+      bgColor={"blackAlpha.300"}
+      overflow="auto"
+      border={"1px solid"}
+      borderColor={useColorModeValue("gray.800", "gray.500")}
+      maxHeight="fit-content"
     >
-      {isOpen && <CreateMaskModal onClose={onClose} />}
-      <Button onClick={() => onOpen()}>Create Mask</Button>
+      <Flex direction="row" mx="6" justifyContent="space-between">
+        <Text>Masks</Text>
+        <Button variant={"outline"} onClick={openFn}>
+          Create Mask
+        </Button>
+      </Flex>
       <Table variant="unstyled">
         <Thead>
           <Tr>
             <Th>Mask</Th>
             <Th>Email</Th>
-            <Th></Th>
+            <Th>Enabled</Th>
           </Tr>
         </Thead>
         <Tbody>
           {masks.map((mask) => (
             <MaskEntry
               key={mask.mask}
-              mask={mask.mask}
               email={mask.email}
               enabled={mask.enabled}
+              mask={mask.mask}
             />
           ))}
         </Tbody>
-        <Tfoot></Tfoot>
+        <Tfoot />
       </Table>
-    </TableContainer>
+    </Box>
   );
 };
 
@@ -90,7 +100,7 @@ interface MaskEntryProps {
   enabled: boolean;
 }
 
-const MaskEntry = ({ mask, email, enabled }: MaskEntryProps) => {
+export const MaskEntry = ({ mask, email, enabled }: MaskEntryProps) => {
   const axios = useAxios();
   const makeDeleteMaskRequest = (mask: string) => {
     return axios.delete(`${BACKEND_URL}/api/user/delete-mask`, {
@@ -134,9 +144,9 @@ const MaskEntry = ({ mask, email, enabled }: MaskEntryProps) => {
       <Tr>
         <Td>{mask}</Td>
         <Td>{email}</Td>
-        {/* <Td>
+        <Td>
           <MaskEntrySwitch mask={mask} enabled={enabled} />
-        </Td> */}
+        </Td>
         <Td>
           <Menu>
             <MenuButton as={Button}>

@@ -19,7 +19,6 @@ export const useAxios = () => {
   axiosInstance.interceptors.request.use(async (req) => {
     try {
       const decoded = jwt_decode<JwtPayload>(accessToken?.token ?? "");
-      console.log("DECODED", decoded, accessToken);
       const isExpired = Date.now() / 1000 > (decoded.exp ?? 0);
       if (!isExpired) return req;
       const response = await axios.post(`${BACKEND_URL}/api/auth/refresh/`, {

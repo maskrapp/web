@@ -25,7 +25,15 @@ function App({ Component, pageProps }: AppProps) {
       "2xl": "1536px",
     },
   };
-  const theme = extendTheme({ config });
+
+  const theme = extendTheme({
+    config,
+    styles: {
+      global: () => ({
+        bg: "",
+      }),
+    },
+  });
 
   if (router.asPath.startsWith("/app")) {
     const queryClient = new QueryClient({

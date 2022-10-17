@@ -3,7 +3,7 @@ import { PropsWithChildren } from "react";
 import { useUser } from "../../context/UserContext";
 
 export const AuthWrapper = ({ children }: PropsWithChildren) => {
-  const { isAuthenticated, refreshToken, accessToken } = useUser();
+  const { isAuthenticated } = useUser();
   if (isAuthenticated) {
     return <>{children}</>;
   }

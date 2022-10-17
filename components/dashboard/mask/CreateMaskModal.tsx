@@ -23,7 +23,7 @@ import { APIResponse, Email } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
 
 interface Props {
-  onClose: () => void;
+  closeFn: () => void;
 }
 
 interface FormValues {
@@ -31,7 +31,7 @@ interface FormValues {
   email: string;
   domain: string;
 }
-export const CreateMaskModal = ({ onClose }: Props) => {
+export const CreateMaskModal = ({ closeFn }: Props) => {
   const {
     handleSubmit,
     register,
@@ -64,7 +64,7 @@ export const CreateMaskModal = ({ onClose }: Props) => {
           status: "success",
           position: "top",
         });
-        onClose();
+        closeFn();
         queryClient.invalidateQueries(["masks"]);
       },
 
@@ -75,7 +75,7 @@ export const CreateMaskModal = ({ onClose }: Props) => {
           status: "error",
           position: "top",
         });
-        onClose();
+        closeFn();
       },
     }
   );
@@ -87,7 +87,7 @@ export const CreateMaskModal = ({ onClose }: Props) => {
   const name = watch("name");
   return (
     // isOpen state is managed outside of the component
-    <Modal isOpen={true} onClose={onClose}>
+    <Modal isOpen={true} onClose={closeFn}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Create mask</ModalHeader>
@@ -151,7 +151,7 @@ export const CreateMaskModal = ({ onClose }: Props) => {
             >
               Add
             </Button>
-            <Button onClick={onClose}>Cancel</Button>
+            <Button onClick={closeFn}>Cancel</Button>
           </ModalFooter>
         </form>
       </ModalContent>

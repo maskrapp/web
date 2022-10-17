@@ -1,6 +1,8 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Button,
+  Flex,
   Menu,
   MenuButton,
   MenuItem,
@@ -9,11 +11,10 @@ import {
   TableContainer,
   Tbody,
   Td,
-  Tfoot,
+  Text,
   Th,
   Thead,
   Tr,
-  useBreakpoint,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -23,10 +24,12 @@ import { useAxios } from "../../../hooks/useAxios";
 import { APIResponse, Email } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
 import { ConfirmationModal } from "../ConfirmationModal";
-import { EmailModal } from "./EmailModal";
 
-export const Emails = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+interface Props {
+  openModalFn: () => void;
+}
+
+export const Emails = ({ openModalFn }: Props) => {
   const axios = useAxios();
 
   const fetchEmails = async () => {
@@ -37,44 +40,45 @@ export const Emails = () => {
     cacheTime: 3600,
     refetchOnMount: false,
   });
-  const emails = query.data;
-  console.log(useBreakpoint());
+  const emails = query.data ?? [];
 
   return (
-    <TableContainer
-      boxSize={{
-        base: "100%", // 0-48em
-        sm: "100%",
-        md: "100%", // 48em-80em,
-        lg: "70%",
-        xl: "80%", // 80em+ //
-        "2xl": "60%",
-      }}
+    <Box
+      bgColor="blackAlpha.300"
+      mt="10"
+      pt="4"
+      pb="4"
+      border={"1px solid"}
+      borderColor="gray.500"
     >
-      {isOpen && <EmailModal isOpen={isOpen} onClose={onClose} />}
-
-      <Button onClick={onOpen}>Add Email</Button>
-      <Table variant="unstyled">
-        <Thead>
-          <Tr>
-            <Th>Email</Th>
-            <Th>Status</Th>
-            <Th></Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {emails?.map((email) => (
-            <EmailEntry
-              key={email.email}
-              email={email.email}
-              is_verified={email.is_verified}
-              is_primary={email.is_primary}
-            />
-          ))}
-        </Tbody>
-        <Tfoot></Tfoot>
-      </Table>
-    </TableContainer>
+      <Flex direction="row" justifyContent="space-between" mx="6">
+        <Text>Connected emails</Text>
+        <Button variant={"outline"} onClick={openModalFn}>
+          Add email
+        </Button>
+      </Flex>
+      <TableContainer overflow="auto">
+        <Table variant="unstyled">
+          <Thead>
+            <Tr>
+              <Th>Email</Th>
+              <Th>Status</Th>
+              <Th></Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {emails.map((email) => (
+              <EmailEntry
+                key={email.email}
+                email={email.email}
+                is_primary={email.is_primary}
+                is_verified={email.is_verified}
+              />
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 };
 
@@ -83,7 +87,7 @@ interface EntryProps {
   is_verified: boolean;
   is_primary: boolean;
 }
-const EmailEntry = ({ email, is_verified, is_primary }: EntryProps) => {
+export const EmailEntry = ({ email, is_verified, is_primary }: EntryProps) => {
   const toast = useToast();
   const queryClient = useQueryClient();
   const axios = useAxios();

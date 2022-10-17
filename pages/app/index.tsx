@@ -1,39 +1,35 @@
-import {
-  Heading,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-} from "@chakra-ui/react";
+import { Box, SimpleGrid, useDisclosure, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { AuthWrapper } from "../../components/auth/AuthWrapper";
+import { DashboardHeader } from "../../components/dashboard/DashboardHeader";
+import { EmailModal } from "../../components/dashboard/email/EmailModal";
 import { Emails } from "../../components/dashboard/email/Emails";
+import { CreateMaskModal } from "../../components/dashboard/mask/CreateMaskModal";
 import { Masks } from "../../components/dashboard/mask/Masks";
-import { DashboardNavigation } from "../../components/navigation/DashboardNavigation";
+import { MaskStats } from "../../components/dashboard/mask/MaskStats";
 
-const MasksPage: NextPage = () => {
+const Index: NextPage = () => {
+  const emailDisclosure = useDisclosure();
+  const maskDisclosure = useDisclosure();
   return (
     <AuthWrapper>
-      <DashboardNavigation>
-        <Heading>Masks</Heading>
-        <Tabs isLazy>
-          <TabList>
-            <Tab>Masks</Tab>
-            <Tab>Emails</Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              <Masks />
-            </TabPanel>
-            <TabPanel>
-              <Emails />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </DashboardNavigation>
+      <VStack h="100vh">
+        <DashboardHeader />
+        {maskDisclosure.isOpen && (
+          <CreateMaskModal closeFn={maskDisclosure.onClose} />
+        )}
+        {emailDisclosure.isOpen && (
+          <EmailModal closeFn={emailDisclosure.onClose} />
+        )}
+        <SimpleGrid columns={1}>
+          <Box>
+            <MaskStats />
+            <Masks openFn={maskDisclosure.onOpen} />
+            <Emails openModalFn={emailDisclosure.onOpen} />
+          </Box>
+        </SimpleGrid>
+      </VStack>
     </AuthWrapper>
   );
 };
-
-export default MasksPage;
+export default Index;

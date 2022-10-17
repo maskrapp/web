@@ -25,12 +25,11 @@ interface Focusable {
 }
 
 interface EmailModalProps {
-  isOpen: boolean;
-  onClose: () => void;
   finalRef?: React.RefObject<Focusable>;
+  closeFn: () => void;
 }
 
-export const EmailModal = ({ onClose }: EmailModalProps) => {
+export const EmailModal = ({ closeFn }: EmailModalProps) => {
   interface FormValues {
     email: string;
   }
@@ -75,12 +74,12 @@ export const EmailModal = ({ onClose }: EmailModalProps) => {
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
     if (!values.email) return;
     mutate(values.email);
-    onClose();
+    closeFn();
   };
 
   return (
     // isOpen state is managed elsewhere
-    <Modal isOpen={true} onClose={onClose}>
+    <Modal isOpen={true} onClose={closeFn}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Add a new Email</ModalHeader>
@@ -115,7 +114,7 @@ export const EmailModal = ({ onClose }: EmailModalProps) => {
             >
               Add
             </Button>
-            <Button onClick={onClose}>Cancel</Button>
+            <Button onClick={closeFn}>Cancel</Button>
           </ModalFooter>
         </form>
       </ModalContent>

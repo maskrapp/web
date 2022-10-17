@@ -1,16 +1,15 @@
 import { Heading } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { AuthWrapper } from "../../components/auth/AuthWrapper";
-import { DashboardNavigation } from "../../components/navigation/DashboardNavigation";
+import { DashboardHeader } from "../../components/dashboard/DashboardHeader";
 
-const MasksPage: NextPage = () => {
+const Settings: NextPage = () => {
   return (
     <AuthWrapper>
-      <DashboardNavigation>
-        <Heading>Settings</Heading>
-      </DashboardNavigation>
+      <DashboardHeader />
+      <Heading>Settings</Heading>
     </AuthWrapper>
   );
 };
 
-export default MasksPage;
+export default Settings;

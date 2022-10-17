@@ -38,7 +38,7 @@ export const Verify = ({ code }: Props) => {
       try {
         const result = await makeVerifyRequest(code);
         setStatusCode(result.status);
-      } catch (e: any) {
+      } catch (e) {
         if (e instanceof AxiosError) {
           setStatusCode(e.response?.status ?? 0);
         }

@@ -1,3 +1,4 @@
+import { Flex } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { Signin } from "../../components/auth/Signin";
@@ -11,9 +12,9 @@ const SignInPage: NextPage = () => {
     return null;
   }
   return (
-    <>
+    <Flex minH={"100vh"} align={"center"} justify={"center"}>
       <Signin />
-    </>
+    </Flex>
   );
 };
 

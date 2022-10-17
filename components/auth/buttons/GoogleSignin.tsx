@@ -10,9 +10,9 @@ import { pairSchema } from "../../../utils/zod";
 const exchangeData = async (code: string) => {
   return axios.post(`${BACKEND_URL}/auth/google`, { code });
 };
+const CLIENTID = process.env.NEXT_PUBLIC_GOOGLE_CLIENTID ?? "";
 
 export const GoogleSignin = () => {
-  const CLIENTID = process.env.NEXT_PUBLIC_GOOGLE_CLIENTID ?? "";
   return (
     <GoogleOAuthProvider clientId={CLIENTID}>
       <Signin />

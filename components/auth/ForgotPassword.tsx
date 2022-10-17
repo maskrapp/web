@@ -26,7 +26,7 @@ export const ForgotPasswordForm = ({ goBackfn }: Props) => {
         spacing={4}
         w={"full"}
         maxW={"md"}
-        bg={useColorModeValue("white", "gray.700")}
+        bg="blackAlpha.300"
         rounded={"xl"}
         boxShadow={"lg"}
         p={6}
