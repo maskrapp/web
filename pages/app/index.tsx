@@ -22,7 +22,7 @@ const Index: NextPage = () => {
           <EmailModal closeFn={emailDisclosure.onClose} />
         )}
         <SimpleGrid columns={1}>
-          <Box>
+          <Box w="4xl">
             <MaskStats />
             <Masks openFn={maskDisclosure.onOpen} />
             <Emails openModalFn={emailDisclosure.onOpen} />
