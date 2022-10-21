@@ -2,7 +2,7 @@ import { Box, SimpleGrid, useDisclosure, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { AuthWrapper } from "../components/auth/AuthWrapper";
 import { DashboardHeader } from "../components/dashboard/DashboardHeader";
-import { EmailModal } from "../components/dashboard/email/EmailModal";
+import { CreateEmailModal } from "../components/dashboard/email/CreateEmailModal";
 import { Emails } from "../components/dashboard/email/Emails";
 import { CreateMaskModal } from "../components/dashboard/mask/CreateMaskModal";
 import { Masks } from "../components/dashboard/mask/Masks";
@@ -19,12 +19,12 @@ const Index: NextPage = () => {
           <CreateMaskModal closeFn={maskDisclosure.onClose} />
         )}
         {emailDisclosure.isOpen && (
-          <EmailModal closeFn={emailDisclosure.onClose} />
+          <CreateEmailModal closeFn={emailDisclosure.onClose} />
         )}
         <SimpleGrid columns={1}>
           <Box w="4xl">
             <MaskStats />
-            <Masks openFn={maskDisclosure.onOpen} />
+            <Masks openModalFn={maskDisclosure.onOpen} />
             <Emails openModalFn={emailDisclosure.onOpen} />
           </Box>
         </SimpleGrid>

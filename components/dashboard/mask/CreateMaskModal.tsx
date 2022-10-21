@@ -87,7 +87,7 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
   const name = watch("name");
   return (
     // isOpen state is managed outside of the component
-    <Modal isOpen={true} onClose={closeFn}>
+    <Modal useInert={false} isOpen={true} onClose={closeFn}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Create mask</ModalHeader>

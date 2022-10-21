@@ -29,7 +29,7 @@ interface EmailModalProps {
   closeFn: () => void;
 }
 
-export const EmailModal = ({ closeFn }: EmailModalProps) => {
+export const CreateEmailModal = ({ closeFn }: EmailModalProps) => {
   interface FormValues {
     email: string;
   }
@@ -47,29 +47,26 @@ export const EmailModal = ({ closeFn }: EmailModalProps) => {
     return axios.post(`${BACKEND_URL}/api/user/add-email`, { email: email });
   };
   const queryClient = useQueryClient();
-  const { mutate, isError, isSuccess } = useMutation(
-    (email: string) => makeEmailRequest(email),
-    {
-      onSuccess: (data) => {
-        toast({
-          title: "Email added",
-          description: "Check your email for a verification link",
-          status: "success",
-          position: "top",
-        });
-        queryClient.invalidateQueries(["emails"]);
-      },
-      onError: (data: AxiosError<APIResponse, any>) => {
-        toast({
-          title: "Something went wrong!",
-          description: data.response?.data?.message,
-          status: "error",
-          position: "top",
-          isClosable: true,
-        });
-      },
-    }
-  );
+  const { mutate } = useMutation((email: string) => makeEmailRequest(email), {
+    onSuccess: () => {
+      toast({
+        title: "Email added",
+        description: "Check your email for a verification link",
+        status: "success",
+        position: "top",
+      });
+      queryClient.invalidateQueries(["emails"]);
+    },
+    onError: (data: AxiosError<APIResponse, any>) => {
+      toast({
+        title: "Something went wrong!",
+        description: data.response?.data?.message,
+        status: "error",
+        position: "top",
+        isClosable: true,
+      });
+    },
+  });
 
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
     if (!values.email) return;

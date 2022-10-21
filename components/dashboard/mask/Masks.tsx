@@ -34,10 +34,10 @@ const makeDeleteMaskRequest = (axios: AxiosInstance, mask: string) => {
   });
 };
 interface Props {
-  openFn: () => void;
+  openModalFn: () => void;
 }
 
-export const Masks = ({ openFn }: Props) => {
+export const Masks = ({ openModalFn }: Props) => {
   const axios = useAxios();
 
   const toast = useToast();
@@ -68,7 +68,7 @@ export const Masks = ({ openFn }: Props) => {
     >
       <Flex direction="row" mx="6" justifyContent="space-between">
         <Text>Masks</Text>
-        <Button variant={"outline"} onClick={openFn}>
+        <Button variant={"outline"} onClick={openModalFn}>
           Create Mask
         </Button>
       </Flex>
