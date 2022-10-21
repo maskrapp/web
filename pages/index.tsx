@@ -13,8 +13,8 @@ const Index: NextPage = () => {
   const maskDisclosure = useDisclosure();
   return (
     <AuthWrapper>
+      <DashboardHeader />
       <VStack h="100vh">
-        <DashboardHeader />
         {maskDisclosure.isOpen && (
           <CreateMaskModal closeFn={maskDisclosure.onClose} />
         )}
@@ -22,7 +22,7 @@ const Index: NextPage = () => {
           <CreateEmailModal closeFn={emailDisclosure.onClose} />
         )}
         <SimpleGrid columns={1}>
-          <Box w="4xl">
+          <Box>
             <MaskStats />
             <Masks openModalFn={maskDisclosure.onOpen} />
             <Emails openModalFn={emailDisclosure.onOpen} />
