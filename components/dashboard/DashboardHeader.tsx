@@ -42,7 +42,6 @@ export const DashboardHeader = () => {
       borderBottom={"1px solid"}
       bgColor={"blackAlpha.300"}
       borderColor="gray.300"
-      w="full"
     >
       <Flex
         justify="space-between"
@@ -81,7 +80,7 @@ export const DashboardHeader = () => {
                 color="red.400"
                 onClick={() => {
                   localStorage.removeItem("tokens");
-                  window.location.assign("/app/signin");
+                  window.location.assign("/signin");
                 }}
               >
                 Sign out

@@ -8,7 +8,7 @@ const SignInPage: NextPage = () => {
   const router = useRouter();
   const { isAuthenticated } = useUser();
   if (isAuthenticated) {
-    router.push("/app");
+    router.push("/");
     return null;
   }
   return (
