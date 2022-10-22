@@ -2,6 +2,7 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { AppProps } from "next/app";
 import { useState } from "react";
+import { ModalContextProvider } from "../context/ModalContext";
 import { UserContextProvider } from "../context/UserContext";
 function App({ Component, pageProps }: AppProps) {
   //TODO: this is a bad fix for next's text mismatch, fix this later.
@@ -40,7 +41,9 @@ function App({ Component, pageProps }: AppProps) {
     <ChakraProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
         <UserContextProvider>
-          <Component {...pageProps} />
+          <ModalContextProvider>
+            <Component {...pageProps} />
+          </ModalContextProvider>
         </UserContextProvider>
       </QueryClientProvider>
     </ChakraProvider>

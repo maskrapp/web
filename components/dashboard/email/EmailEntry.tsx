@@ -13,16 +13,13 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, AxiosInstance } from "axios";
 import { motion } from "framer-motion";
+
 import { useAxios } from "../../../hooks/useAxios";
+import { useModal } from "../../../hooks/useModal";
 import { APIResponse, Email } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
 import { ConfirmationModal } from "../ConfirmationModal";
 
-const requestNewLink = (axios: AxiosInstance, email: string) => {
-  return axios.post(`${BACKEND_URL}/api/user/send-link`, {
-    email,
-  });
-};
 const deleteEmail = (axios: AxiosInstance, email: string) => {
   return axios.delete(`${BACKEND_URL}/api/user/delete-email`, {
     data: { email },
@@ -41,29 +38,7 @@ export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
   const toast = useToast();
   const queryClient = useQueryClient();
   const axios = useAxios();
-  const requestLinkMutation = useMutation(
-    (email: string) => requestNewLink(axios, email),
-    {
-      onSuccess: (data) => {
-        toast({
-          title: "Email sent!",
-          description: "Check your mailbox for a verification link",
-          status: "success",
-          position: "top",
-          isClosable: true,
-        });
-      },
-      onError: (data: AxiosError<APIResponse, any>) => {
-        toast({
-          title: "Error",
-          description: data.response?.data?.message,
-          status: "error",
-          position: "top",
-          isClosable: true,
-        });
-      },
-    }
-  );
+
   const deleteEmailMutation = useMutation(
     (email: string) => deleteEmail(axios, email),
     {
@@ -92,13 +67,15 @@ export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
     }
   );
 
-  const { isOpen, onClose, onOpen } = useDisclosure();
+  const confirmationModalDisclosure = useDisclosure();
+  const modal = useModal();
+
   return (
     <>
-      {isOpen && (
+      {confirmationModalDisclosure.isOpen && (
         <ConfirmationModal
           text="placeholder"
-          onClose={onClose}
+          onClose={confirmationModalDisclosure.onClose}
           submitButtonText="Delete Email"
           submitAction={() => deleteEmailMutation.mutate(email)}
         />
@@ -113,11 +90,19 @@ export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
             </MenuButton>
             <MenuList>
               {!is_verified && (
-                <MenuItem onClick={() => requestLinkMutation.mutate(email)}>
+                <MenuItem
+                  onClick={() => {
+                    modal.verifyEmailModal.openWithProps(email, false);
+                  }}
+                >
                   Verify
                 </MenuItem>
               )}
-              <MenuItem as="button" color="red.400" onClick={() => onOpen()}>
+              <MenuItem
+                as="button"
+                color="red.400"
+                onClick={() => confirmationModalDisclosure.onOpen()}
+              >
                 Delete
               </MenuItem>
             </MenuList>

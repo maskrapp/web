@@ -16,8 +16,10 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
+
 import { useAxios } from "../../../hooks/useAxios";
-import { APIResponse } from "../../../types";
+import { useModal } from "../../../hooks/useModal";
+import { APIResponse, Email } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
 
 interface Focusable {
@@ -41,26 +43,45 @@ export const CreateEmailModal = ({ closeFn }: EmailModalProps) => {
   } = useForm<FormValues>();
 
   const toast = useToast();
-
   const axios = useAxios();
+
+  const { verifyEmailModal } = useModal();
+
   const makeEmailRequest = async (email: string) => {
-    return axios.post(`${BACKEND_URL}/api/user/add-email`, { email: email });
+    try {
+      const response = await axios.post(`${BACKEND_URL}/api/user/add-email`, {
+        email,
+      });
+      return { ...response, email: email };
+    } catch (e) {
+      throw e;
+    }
   };
+
   const queryClient = useQueryClient();
+
   const { mutate } = useMutation((email: string) => makeEmailRequest(email), {
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast({
         title: "Email added",
-        description: "Check your email for a verification link",
+        description: "Check your mailbox for a verification code",
         status: "success",
         position: "top",
       });
-      queryClient.invalidateQueries(["emails"]);
+      const emails: Email[] = queryClient.getQueryData(["emails"]) ?? [];
+      queryClient.setQueryData(
+        ["emails"],
+        [
+          ...emails,
+          { email: data.email, is_primary: false, is_verified: false },
+        ]
+      );
+      verifyEmailModal.openWithProps(data.email, true);
     },
     onError: (data: AxiosError<APIResponse, any>) => {
       toast({
-        title: "Something went wrong!",
-        description: data.response?.data?.message,
+        title: "Error",
+        description: data.response?.data.message,
         status: "error",
         position: "top",
         isClosable: true,

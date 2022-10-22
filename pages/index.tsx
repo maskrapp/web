@@ -1,35 +1,45 @@
-import { Box, SimpleGrid, useDisclosure, VStack } from "@chakra-ui/react";
+import { Box, SimpleGrid, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { AuthWrapper } from "../components/auth/AuthWrapper";
 import { DashboardHeader } from "../components/dashboard/DashboardHeader";
 import { CreateEmailModal } from "../components/dashboard/email/CreateEmailModal";
 import { Emails } from "../components/dashboard/email/Emails";
+import { VerifyEmailModal } from "../components/dashboard/email/VerifyEmailModal";
 import { CreateMaskModal } from "../components/dashboard/mask/CreateMaskModal";
 import { Masks } from "../components/dashboard/mask/Masks";
 import { MaskStats } from "../components/dashboard/mask/MaskStats";
+import { useModal } from "../hooks/useModal";
 
 const Index: NextPage = () => {
-  const emailDisclosure = useDisclosure();
-  const maskDisclosure = useDisclosure();
+  const modal = useModal();
   return (
     <AuthWrapper>
       <DashboardHeader />
       <VStack h="100vh">
-        {maskDisclosure.isOpen && (
-          <CreateMaskModal closeFn={maskDisclosure.onClose} />
+        {modal.createMaskModal.isOpen && (
+          <CreateMaskModal closeFn={modal.createMaskModal.onClose} />
         )}
-        {emailDisclosure.isOpen && (
-          <CreateEmailModal closeFn={emailDisclosure.onClose} />
+        {modal.createEmailModal.isOpen && (
+          <CreateEmailModal closeFn={modal.createEmailModal.onClose} />
         )}
+        {modal.verifyEmailModal.isOpen && (
+          <VerifyEmailModal
+            email={modal.verifyEmailModal.email}
+            codeSent={modal.verifyEmailModal.codeSent}
+            closeFn={modal.verifyEmailModal.onClose}
+          />
+        )}
+
         <SimpleGrid columns={1}>
           <Box>
             <MaskStats />
-            <Masks openModalFn={maskDisclosure.onOpen} />
-            <Emails openModalFn={emailDisclosure.onOpen} />
+            <Masks openModalFn={modal.createMaskModal.onOpen} />
+            <Emails openModalFn={modal.createEmailModal.onOpen} />
           </Box>
         </SimpleGrid>
       </VStack>
     </AuthWrapper>
   );
 };
+
 export default Index;
