@@ -5,8 +5,10 @@ import {
   useEffect,
   useState,
 } from "react";
+
 import { Token, TokenPair } from "../types";
 import { pairSchema } from "../utils/zod";
+
 interface UserContextType {
   isAuthenticated: boolean;
   accessToken: Token | null;

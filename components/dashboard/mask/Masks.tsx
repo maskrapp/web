@@ -10,12 +10,11 @@ import {
   Thead,
   Tr,
   useColorModeValue,
-  useToast,
 } from "@chakra-ui/react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
+
 import { useAxios } from "../../../hooks/useAxios";
-import { BACKEND_URL } from "../../../utils/constants";
 import { MaskEntry } from "./MaskEntry";
 
 interface MaskEntry {
@@ -28,21 +27,12 @@ const fetchMasks = async (axios: AxiosInstance) => {
   return response.data ?? [];
 };
 
-const makeDeleteMaskRequest = (axios: AxiosInstance, mask: string) => {
-  return axios.delete(`${BACKEND_URL}/api/user/delete-mask`, {
-    data: { mask: mask },
-  });
-};
 interface Props {
   openModalFn: () => void;
 }
 
 export const Masks = ({ openModalFn }: Props) => {
   const axios = useAxios();
-
-  const toast = useToast();
-
-  const queryClient = useQueryClient();
 
   const query = useQuery<MaskEntry[], Error>(
     ["masks"],
@@ -54,6 +44,7 @@ export const Masks = ({ openModalFn }: Props) => {
   );
 
   const masks = query.data ?? [];
+
   return (
     <Box
       margin={"auto"}

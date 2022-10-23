@@ -11,6 +11,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+
 import { useAxios } from "../../../hooks/useAxios";
 import { Email } from "../../../types";
 import { EmailEntry } from "./EmailEntry";
