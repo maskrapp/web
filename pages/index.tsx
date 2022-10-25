@@ -11,22 +11,22 @@ import { MaskStats } from "../components/dashboard/mask/MaskStats";
 import { useModal } from "../hooks/useModal";
 
 const Index: NextPage = () => {
-  const modal = useModal();
+  const { createMaskModal, createEmailModal, verifyEmailModal } = useModal();
   return (
     <AuthWrapper>
       <DashboardHeader />
       <VStack h="100vh">
-        {modal.createMaskModal.isOpen && (
-          <CreateMaskModal closeFn={modal.createMaskModal.onClose} />
+        {createMaskModal.isOpen && (
+          <CreateMaskModal closeFn={createMaskModal.onClose} />
         )}
-        {modal.createEmailModal.isOpen && (
-          <CreateEmailModal closeFn={modal.createEmailModal.onClose} />
+        {createEmailModal.isOpen && (
+          <CreateEmailModal closeFn={createEmailModal.onClose} />
         )}
-        {modal.verifyEmailModal.isOpen && (
+        {verifyEmailModal.isOpen && (
           <VerifyEmailModal
-            email={modal.verifyEmailModal.email}
-            codeSent={modal.verifyEmailModal.codeSent}
-            closeFn={modal.verifyEmailModal.onClose}
+            email={verifyEmailModal.email}
+            codeSent={verifyEmailModal.codeSent}
+            closeFn={verifyEmailModal.onClose}
           />
         )}
 
@@ -38,8 +38,8 @@ const Index: NextPage = () => {
             }}
           >
             <MaskStats />
-            <Masks openModalFn={modal.createMaskModal.onOpen} />
-            <Emails openModalFn={modal.createEmailModal.onOpen} />
+            <Masks openModalFn={createMaskModal.onOpen} />
+            <Emails openModalFn={createEmailModal.onOpen} />
           </Box>
         </SimpleGrid>
       </VStack>
