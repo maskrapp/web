@@ -31,7 +31,12 @@ const Index: NextPage = () => {
         )}
 
         <SimpleGrid columns={1}>
-          <Box>
+          <Box
+            boxSize={{
+              md: "4xl",
+              base: "100%",
+            }}
+          >
             <MaskStats />
             <Masks openModalFn={modal.createMaskModal.onOpen} />
             <Emails openModalFn={modal.createEmailModal.onOpen} />
