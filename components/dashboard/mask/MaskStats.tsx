@@ -7,23 +7,40 @@ import {
   StatNumber,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
+import { AxiosInstance } from "axios";
 import { ReactNode } from "react";
+import { useAxios } from "../../../hooks/useAxios";
+import { Mask } from "../../../types";
 
-//TODO: implement this later
+const fetchMasks = async (axios: AxiosInstance) => {
+  const response = await axios.post<Mask[]>("/api/user/masks");
+  return response.data ?? [];
+};
+
 export const MaskStats = () => {
+  const axios = useAxios();
+  const { data } = useQuery<Mask[], Error>(
+    ["masks"],
+    () => fetchMasks(axios),
+    {}
+  );
+
+  const maskCount = !!data ? data.length : 0;
+
   return (
     <Box maxW="7xl" mx={"auto"} pt={5}>
       <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 5, lg: 8 }}>
-        <StatsCard title={"Total Masks"} stat={"1"} />
-        <StatsCard title={"Mails forwarded"} stat={"0"} />
-        <StatsCard title={"Mails received"} stat={"0"} />
+        <StatsCard title={"Total Masks"} stat={maskCount} />
+        <StatsCard title={"Mails forwarded"} stat={0} />
+        <StatsCard title={"Mails received"} stat={0} />
       </SimpleGrid>
     </Box>
   );
 };
 interface Props {
   title: string;
-  stat: string;
+  stat: string | number;
   icon?: ReactNode;
 }
 
