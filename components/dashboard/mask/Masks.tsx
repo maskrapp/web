@@ -15,15 +15,11 @@ import { useQuery } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
 
 import { useAxios } from "../../../hooks/useAxios";
+import { Mask } from "../../../types";
 import { MaskEntry } from "./MaskEntry";
 
-interface MaskEntry {
-  mask: string;
-  email: string;
-  enabled: boolean;
-}
 const fetchMasks = async (axios: AxiosInstance) => {
-  const response = await axios.post<MaskEntry[]>("/api/user/masks");
+  const response = await axios.post<Mask[]>("/api/user/masks");
   return response.data ?? [];
 };
 
@@ -34,14 +30,9 @@ interface Props {
 export const Masks = ({ openModalFn }: Props) => {
   const axios = useAxios();
 
-  const query = useQuery<MaskEntry[], Error>(
-    ["masks"],
-    () => fetchMasks(axios),
-    {
-      cacheTime: 3600,
-      refetchOnMount: false,
-    }
-  );
+  const query = useQuery<Mask[], Error>(["masks"], () => fetchMasks(axios), {
+    refetchOnMount: true,
+  });
 
   const masks = query.data ?? [];
 

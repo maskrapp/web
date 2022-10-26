@@ -11,9 +11,7 @@ export interface Email {
 export interface Mask {
   mask: string;
   enabled: boolean;
-  emails: {
-    email: string;
-  };
+  email: string;
 }
 
 export interface APIResponse {
