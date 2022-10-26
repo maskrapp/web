@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import jwt_decode, { InvalidTokenError, JwtPayload } from "jwt-decode";
-import { useUser } from "../context/UserContext";
+import { useUser } from "../contexts/UserContext";
 import { Token } from "../types";
 import { BACKEND_URL } from "../utils/constants";
 

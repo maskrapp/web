@@ -1,13 +1,9 @@
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { AppProps } from "next/app";
-import { useState } from "react";
-import { ModalContextProvider } from "../context/ModalContext";
-import { UserContextProvider } from "../context/UserContext";
+import { ModalContextProvider } from "../contexts/ModalContext";
+import { UserContextProvider } from "../contexts/UserContext";
 function App({ Component, pageProps }: AppProps) {
-  //TODO: this is a bad fix for next's text mismatch, fix this later.
-  const [loading, setLoading] = useState(true);
-
   const config = {
     initialColorMode: "dark",
     useSystemColorMode: false,
@@ -22,11 +18,6 @@ function App({ Component, pageProps }: AppProps) {
 
   const theme = extendTheme({
     config,
-    styles: {
-      global: () => ({
-        bg: "",
-      }),
-    },
   });
 
   const queryClient = new QueryClient({
