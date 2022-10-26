@@ -2,7 +2,7 @@ import { Flex } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { Signin } from "../components/auth/Signin";
-import { useUser } from "../contexts/UserContext";
+import { useUser } from "../hooks/useUser";
 
 const SignInPage: NextPage = () => {
   const router = useRouter();

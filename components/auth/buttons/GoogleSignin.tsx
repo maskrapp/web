@@ -2,11 +2,10 @@ import { Button, Center, Text } from "@chakra-ui/react";
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { FcGoogle } from "react-icons/fc";
-import { useUser } from "../../../contexts/UserContext";
+import { useUser } from "../../../hooks/useUser";
 import { TokenPair } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
 import { pairSchema } from "../../../utils/zod";
-
 const exchangeData = async (code: string) => {
   return axios.post(`${BACKEND_URL}/auth/google`, { code });
 };

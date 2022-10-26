@@ -1,10 +1,4 @@
-import {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, PropsWithChildren, useEffect, useState } from "react";
 
 import { Token, TokenPair } from "../types";
 import { pairSchema } from "../utils/zod";
@@ -91,12 +85,4 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
     },
   };
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
-};
-
-export const useUser = () => {
-  const context = useContext(UserContext);
-  if (context === undefined) {
-    throw new Error("useUser must be used within UserContextProvider");
-  }
-  return context;
 };
