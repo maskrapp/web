@@ -17,10 +17,10 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, AxiosInstance } from "axios";
 import { useEffect, useRef, useState } from "react";
-import { z } from "zod";
 import { useAxios } from "../../../hooks/useAxios";
 import { APIResponse, Email } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
+import { verificationCodeSchema } from "../../../utils/zod";
 
 const requestNewCode = (axios: AxiosInstance, email: string) => {
   return axios.post(`${BACKEND_URL}/api/user/request-code`, {
@@ -103,7 +103,6 @@ export const VerifyEmailModal = ({ closeFn, email, codeSent }: Props) => {
   }, []);
 
   const [code, setCode] = useState<string>();
-  const [hasSentCode, sendCode] = useState();
 
   return (
     <Modal isOpen={true} onClose={closeFn}>
@@ -125,7 +124,7 @@ export const VerifyEmailModal = ({ closeFn, email, codeSent }: Props) => {
                   setCode(value);
                 }}
                 onComplete={(value: string) => {
-                  const { success } = submitSchema.safeParse(value);
+                  const { success } = verificationCodeSchema.safeParse(value);
                   if (success) {
                     verifyCodeMutation.mutate(value);
                   } else {
@@ -159,5 +158,3 @@ export const VerifyEmailModal = ({ closeFn, email, codeSent }: Props) => {
     </Modal>
   );
 };
-
-const submitSchema = z.string().regex(new RegExp("^[0-9]{5}$"));

@@ -12,3 +12,6 @@ export const pairSchema = z.object({
   access_token: tokenSchema,
   refresh_token: tokenSchema,
 });
+export const verificationCodeSchema = z
+  .string()
+  .regex(new RegExp("^[0-9]{5}$"));

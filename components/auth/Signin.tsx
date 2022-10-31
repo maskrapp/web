@@ -10,7 +10,6 @@ import {
   Link,
   Stack,
   Text,
-  useColorModePreference,
 } from "@chakra-ui/react";
 
 import { useState } from "react";
@@ -19,7 +18,6 @@ import { ForgotPasswordForm } from "./ForgotPassword";
 
 export const Signin = () => {
   const [forgotPassword, setForgotPassword] = useState(false);
-  const color = useColorModePreference();
   if (!forgotPassword) {
     return (
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
