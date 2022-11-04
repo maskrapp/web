@@ -26,7 +26,7 @@ const Index: NextPage = () => {
       </Head>
       <AuthWrapper>
         <DashboardHeader />
-        <VStack h="100vh">
+        <VStack>
           {createMaskModal.isOpen && (
             <CreateMaskModal closeFn={createMaskModal.onClose} />
           )}
