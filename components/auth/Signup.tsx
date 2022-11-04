@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertIcon,
   Box,
   Button,
   FormControl,
@@ -6,7 +8,6 @@ import {
   FormLabel,
   Heading,
   HStack,
-  Icon,
   Input,
   Link as ChakraLink,
   Stack,
@@ -22,7 +23,6 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { GoVerified } from "react-icons/go";
 import { useUser } from "../../hooks/useUser";
 import { APIResponse, TokenPair } from "../../types";
 import { BACKEND_URL } from "../../utils/constants";
@@ -268,8 +268,9 @@ const VerifyCodeForm = ({ email, successFn }: VerifyCodeProps) => {
   return (
     <Box>
       <HStack mb="3">
-        <Icon as={GoVerified} />
-        <Text>A code has been sent to your email.</Text>
+        <Alert status="success" variant="solid" rounded="base">
+          <AlertIcon />A code has been sent to your email.
+        </Alert>
       </HStack>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl id="email" isInvalid={!!errors.code}>
