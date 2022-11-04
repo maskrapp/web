@@ -4,7 +4,6 @@ import {
   AlertIcon,
   Box,
   Button,
-  Checkbox,
   Divider,
   FormControl,
   FormLabel,
@@ -153,7 +152,6 @@ export const Signin = () => {
                   align={"start"}
                   justify={"space-between"}
                 >
-                  <Checkbox>Remember me</Checkbox>
                   <Button
                     variant="link"
                     onClick={() => setForgotPassword(true)}
