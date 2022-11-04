@@ -22,15 +22,21 @@ import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import Link from "next/link";
 import router from "next/router";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useUser } from "../../hooks/useUser";
 import { APIResponse, TokenPair } from "../../types";
 import { BACKEND_URL } from "../../utils/constants";
 import { pairSchema } from "../../utils/zod";
-const makeLoginRequest = (email: string, password: string) => {
+const makeLoginRequest = (
+  email: string,
+  password: string,
+  captcha_token: string
+) => {
   return axios.post(`${BACKEND_URL}/auth/email-login`, {
     email,
     password,
+    captcha_token,
   });
 };
 
@@ -43,8 +49,14 @@ export const Signin = () => {
   const [forgotPassword, setForgotPassword] = useState(false);
   const [apiError, setApiError] = useState<string>();
   const { actions } = useUser();
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const { mutate } = useMutation(
-    ({ email, password }: SignInArguments) => makeLoginRequest(email, password),
+    ({
+      email,
+      password,
+      captcha_token,
+    }: SignInArguments & { captcha_token: string }) =>
+      makeLoginRequest(email, password, captcha_token),
     {
       onSuccess: (data: AxiosResponse<TokenPair, any>) => {
         const { success } = pairSchema.safeParse(data.data);
@@ -66,11 +78,17 @@ export const Signin = () => {
   const {
     handleSubmit,
     register,
-    setError,
     formState: { errors },
   } = useForm<SignInArguments>();
 
-  const onSubmit: SubmitHandler<SignInArguments> = (args) => mutate(args);
+  const onSubmit: SubmitHandler<SignInArguments> = async (args) => {
+    if (!executeRecaptcha) {
+      console.error("recaptcha is not available!");
+      return;
+    }
+    const captcha_token = await executeRecaptcha("email_login");
+    mutate({ ...args, captcha_token });
+  };
 
   if (!forgotPassword) {
     return (
