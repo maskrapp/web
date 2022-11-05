@@ -10,8 +10,10 @@ import {
   HStack,
   Input,
   Link as ChakraLink,
+  ListItem,
   Stack,
   Text,
+  UnorderedList,
   useToast,
   VStack,
 } from "@chakra-ui/react";
@@ -244,6 +246,7 @@ const VerifyCodeForm = ({ email, successFn }: VerifyCodeProps) => {
 
   const resendCodeMutation = useMutation(
     (captcha_token: string) => makeResendCodeRequest(email, captcha_token),
+
     {
       onSuccess: () => {
         toast({
@@ -400,14 +403,11 @@ const CreateAccountForm = ({ email, code }: CreateAccountFormProps) => {
             <Input
               type="password"
               {...register("password", {
-                required: true,
-                minLength: {
-                  value: 4,
-                  message: "Password length should be at least 4 characters",
-                },
-                maxLength: {
-                  value: 16,
-                  message: "Password cannot exceed more than 12 characters",
+                pattern: {
+                  value:
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/i,
+                  message:
+                    "Password should contain at least one uppercase character, a numeric character, a special character and must be between 8 and 32 characters",
                 },
               })}
             />
@@ -433,6 +433,16 @@ const CreateAccountForm = ({ email, code }: CreateAccountFormProps) => {
             </FormErrorMessage>
           </FormControl>
         </VStack>
+        <Box mt="3" textColor="gray.100">
+          <Text>Your password must:</Text>
+          <UnorderedList mt="0.5">
+            <ListItem>be between 8 and 32 characters</ListItem>
+            <ListItem>have at least 1 special character</ListItem>
+            <ListItem>have at least 1 number</ListItem>
+            <ListItem>have at least 1 uppercase character</ListItem>
+          </UnorderedList>
+        </Box>
+
         <Button
           w="100%"
           mt="5"
