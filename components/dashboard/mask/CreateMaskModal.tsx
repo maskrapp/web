@@ -81,7 +81,6 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
   );
 
   const onSubmit = (data: FormValues) => {
-    if (!data.name) return;
     mutate(data);
   };
   const name = watch("name");
@@ -102,6 +101,7 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
                   pattern: new RegExp(
                     "^(?=[a-zA-Z0-9._]{3,24}$)(?!.*[_.]{2})[^_.].*[^_.]$"
                   ),
+                  required: true,
                 })}
                 autoFocus
                 name="name"
@@ -109,7 +109,7 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
               {!errors.name && !!name && (
                 <FormHelperText>
                   {"Your masked email adres will be: " +
-                    name +
+                    name.toLowerCase() +
                     "@" +
                     domainRef.current!.value}
                 </FormHelperText>
