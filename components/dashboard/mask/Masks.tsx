@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Flex,
   Table,
@@ -9,18 +8,18 @@ import {
   Th,
   Thead,
   Tr,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
 
 import { useAxios } from "../../../hooks/useAxios";
 import { Mask } from "../../../types";
+import { Card } from "../../shared/Card";
 import { MaskEntry } from "./MaskEntry";
 
 const fetchMasks = async (axios: AxiosInstance) => {
   const response = await axios.post<Mask[]>("/api/user/masks");
-  return response.data ?? [];
+  return response.data;
 };
 
 interface Props {
@@ -37,17 +36,7 @@ export const Masks = ({ openModalFn }: Props) => {
   const masks = query.data ?? [];
 
   return (
-    <Box
-      margin={"auto"}
-      mt="10"
-      pt="4"
-      pb="4"
-      bgColor={"blackAlpha.300"}
-      overflowX="auto"
-      overflowY="hidden"
-      border={"1px solid"}
-      borderColor={useColorModeValue("gray.800", "gray.500")}
-    >
+    <Card>
       <Flex direction="row" mx="6" justifyContent="space-between">
         <Text>Masks</Text>
         <Button variant={"outline"} onClick={openModalFn}>
@@ -74,6 +63,6 @@ export const Masks = ({ openModalFn }: Props) => {
         </Tbody>
         <Tfoot />
       </Table>
-    </Box>
+    </Card>
   );
 };

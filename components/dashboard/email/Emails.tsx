@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Flex,
   Table,
@@ -14,6 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { useAxios } from "../../../hooks/useAxios";
 import { Email } from "../../../types";
+import { Card } from "../../shared/Card";
 import { EmailEntry } from "./EmailEntry";
 
 interface Props {
@@ -35,15 +35,7 @@ export const Emails = ({ openModalFn }: Props) => {
   const emails = query.data ?? [];
 
   return (
-    <Box
-      bgColor="blackAlpha.300"
-      mt="10"
-      pt="4"
-      pb="4"
-      overflowX="auto"
-      border={"1px solid"}
-      borderColor="gray.500"
-    >
+    <Card>
       <Flex direction="row" justifyContent="space-between" mx="6">
         <Text>Connected emails</Text>
         <Button variant={"outline"} onClick={openModalFn}>
@@ -71,6 +63,6 @@ export const Emails = ({ openModalFn }: Props) => {
           </Tbody>
         </Table>
       </TableContainer>
-    </Box>
+    </Card>
   );
 };
