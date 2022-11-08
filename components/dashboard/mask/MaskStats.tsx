@@ -38,6 +38,7 @@ export const MaskStats = () => {
     </Box>
   );
 };
+
 interface Props {
   title: string;
   stat: string | number;
