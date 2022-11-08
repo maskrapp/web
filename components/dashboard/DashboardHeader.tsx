@@ -1,16 +1,18 @@
-import { ChevronDownIcon, SettingsIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Button,
   Flex,
   HStack,
   Icon,
   IconProps,
+  Link as ChakraLink,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   useToast,
 } from "@chakra-ui/react";
+import Link from "next/link";
 
 export const Logo = (props?: IconProps) => {
   // THIS IS A PLACEHOLDER; replace this later
@@ -35,7 +37,6 @@ export const Logo = (props?: IconProps) => {
 
 export const DashboardHeader = () => {
   const toast = useToast();
-
   return (
     <Flex
       justify="center"
@@ -50,8 +51,23 @@ export const DashboardHeader = () => {
         maxW="1000px"
         flex="1"
       >
-        <Logo boxSize={"30px"} color="red" />
-
+        <HStack
+          spacing={{
+            md: 20,
+            base: "16",
+          }}
+        >
+          <Logo boxSize={"30px"} color="red" />
+          <HStack
+            spacing={{
+              base: 2,
+              md: 5,
+            }}
+          >
+            <NavItem name="Dashboard" href="/" />
+            <NavItem name="Settings" href="/settings" />
+          </HStack>
+        </HStack>
         <HStack>
           <Menu placement="bottom-end">
             <MenuButton as={Button} variant="outline" px="2">
@@ -61,21 +77,6 @@ export const DashboardHeader = () => {
               </HStack>
             </MenuButton>
             <MenuList>
-              <MenuItem
-                onClick={() =>
-                  toast({
-                    position: "top",
-                    isClosable: true,
-                    title: "Coming soon",
-                    status: "info",
-                  })
-                }
-              >
-                <HStack alignItems="center">
-                  <Icon as={SettingsIcon} />
-                  <span>Settings</span>
-                </HStack>
-              </MenuItem>
               <MenuItem
                 color="red.400"
                 onClick={() => {
@@ -90,5 +91,29 @@ export const DashboardHeader = () => {
         </HStack>
       </Flex>
     </Flex>
+  );
+};
+
+interface NavItemProps {
+  name: string;
+  href: string;
+}
+
+const NavItem = ({ name, href }: NavItemProps) => {
+  return (
+    <Link href={href}>
+      <ChakraLink
+        px={2}
+        py={1}
+        rounded={"base"}
+        _hover={{
+          textDecoration: "none",
+          bg: "gray.700",
+        }}
+        href={"#"}
+      >
+        {name}
+      </ChakraLink>
+    </Link>
   );
 };
