@@ -2,6 +2,7 @@ import {
   Button,
   Flex,
   Table,
+  TableContainer,
   Tbody,
   Text,
   Tfoot,
@@ -43,26 +44,28 @@ export const Masks = ({ openModalFn }: Props) => {
           Create Mask
         </Button>
       </Flex>
-      <Table variant="unstyled">
-        <Thead>
-          <Tr>
-            <Th>Mask</Th>
-            <Th>Email</Th>
-            <Th>Enabled</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {masks.map((mask) => (
-            <MaskEntry
-              key={mask.mask}
-              email={mask.email}
-              mask={mask.mask}
-              enabled={mask.enabled}
-            />
-          ))}
-        </Tbody>
-        <Tfoot />
-      </Table>
+      <TableContainer overflow="auto">
+        <Table variant="unstyled">
+          <Thead>
+            <Tr>
+              <Th>Mask</Th>
+              <Th>Email</Th>
+              <Th>Enabled</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {masks.map((mask) => (
+              <MaskEntry
+                key={mask.mask}
+                email={mask.email}
+                mask={mask.mask}
+                enabled={mask.enabled}
+              />
+            ))}
+          </Tbody>
+          <Tfoot />
+        </Table>
+      </TableContainer>
     </Card>
   );
 };
