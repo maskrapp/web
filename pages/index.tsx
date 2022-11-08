@@ -1,4 +1,4 @@
-import { Box, SimpleGrid, VStack } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { NextPage } from "next";
 import Head from "next/head";
 import { AuthWrapper } from "../components/auth/AuthWrapper";
@@ -26,34 +26,31 @@ const Index: NextPage = () => {
       </Head>
       <AuthWrapper>
         <DashboardHeader />
-        <VStack>
-          {createMaskModal.isOpen && (
-            <CreateMaskModal closeFn={createMaskModal.onClose} />
-          )}
-          {createEmailModal.isOpen && (
-            <CreateEmailModal closeFn={createEmailModal.onClose} />
-          )}
-          {verifyEmailModal.isOpen && (
-            <VerifyEmailModal
-              email={verifyEmailModal.email}
-              codeSent={verifyEmailModal.codeSent}
-              closeFn={verifyEmailModal.onClose}
-            />
-          )}
+        {createMaskModal.isOpen && (
+          <CreateMaskModal closeFn={createMaskModal.onClose} />
+        )}
+        {createEmailModal.isOpen && (
+          <CreateEmailModal closeFn={createEmailModal.onClose} />
+        )}
+        {verifyEmailModal.isOpen && (
+          <VerifyEmailModal
+            email={verifyEmailModal.email}
+            codeSent={verifyEmailModal.codeSent}
+            closeFn={verifyEmailModal.onClose}
+          />
+        )}
 
-          <SimpleGrid columns={1}>
-            <Box
-              boxSize={{
-                md: "4xl",
-                base: "100%",
-              }}
-            >
-              <MaskStats />
-              <Masks openModalFn={createMaskModal.onOpen} />
-              <Emails openModalFn={createEmailModal.onOpen} />
-            </Box>
-          </SimpleGrid>
-        </VStack>
+        <Box
+          margin="auto"
+          boxSize={{
+            md: "4xl",
+            base: "100%",
+          }}
+        >
+          <MaskStats />
+          <Masks openModalFn={createMaskModal.onOpen} />
+          <Emails openModalFn={createEmailModal.onOpen} />
+        </Box>
       </AuthWrapper>
     </>
   );
