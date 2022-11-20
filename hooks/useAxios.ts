@@ -5,7 +5,11 @@ import { BACKEND_URL } from "../utils/constants";
 import { useUser } from "./useUser";
 
 export const useAxios = () => {
-  const { refreshToken, accessToken } = useUser();
+  const {
+    refreshToken,
+    accessToken,
+    actions: { setAccessToken },
+  } = useUser();
 
   const axiosInstance = axios.create({
     baseURL: BACKEND_URL,
@@ -25,9 +29,10 @@ export const useAxios = () => {
         refresh_token: refreshToken,
         access_token: newToken,
       };
+      setAccessToken(newToken);
       localStorage.setItem("tokens", JSON.stringify(tokens));
       if (req.headers) {
-        req.headers.Authorization = `Bearer ${tokens?.access_token.token}`;
+        req.headers.Authorization = `Bearer ${accessToken}`;
       }
     } catch (e: any) {
       if (e.name === "AxiosError") {
