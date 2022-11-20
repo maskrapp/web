@@ -44,8 +44,8 @@ export const MaskStats = () => {
     <Box maxW="7xl" mx={"auto"} pt={5}>
       <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 5, lg: 8 }}>
         <StatsCard title={"Total Masks"} stat={maskCount} />
-        <StatsCard title={"Messages forwarded"} stat={messagesForwarded} />
-        <StatsCard title={"Messages received"} stat={messagesReceived} />
+        <StatsCard title={"Messages Received"} stat={messagesReceived} />
+        <StatsCard title={"Messages Forwarded"} stat={messagesForwarded} />
       </SimpleGrid>
     </Box>
   );
