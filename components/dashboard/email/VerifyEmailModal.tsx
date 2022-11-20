@@ -100,7 +100,7 @@ export const VerifyEmailModal = ({ closeFn, email, codeSent }: Props) => {
     if (!codeSent) {
       requestCodeMutation.mutate();
     }
-  }, []);
+  }, [codeSent, requestCodeMutation]);
 
   const [code, setCode] = useState<string>();
 
