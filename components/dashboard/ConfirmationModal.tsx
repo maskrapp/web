@@ -1,4 +1,7 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Button,
   Modal,
   ModalBody,
@@ -29,7 +32,13 @@ export const ConfirmationModal = ({
       <ModalContent>
         <ModalHeader>Confirmation</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>{text}</ModalBody>
+        <ModalBody>
+          <Alert status="warning" rounded="base" mb="3">
+            <AlertIcon />
+            <AlertDescription>{text}</AlertDescription>
+          </Alert>
+        </ModalBody>
+
         <ModalFooter>
           <Button colorScheme="blue" mr={3} onClick={onClose}>
             Close

@@ -74,7 +74,7 @@ export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
     <>
       {confirmationModalDisclosure.isOpen && (
         <ConfirmationModal
-          text="placeholder"
+          text="This action cannot be reversed, are you sure you want to delete this email?"
           onClose={confirmationModalDisclosure.onClose}
           submitButtonText="Delete Email"
           submitAction={() => deleteEmailMutation.mutate(email)}

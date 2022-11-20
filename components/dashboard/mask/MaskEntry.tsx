@@ -66,7 +66,7 @@ export const MaskEntry = ({ mask, email, enabled }: MaskEntryProps) => {
         <ConfirmationModal
           submitAction={() => mutate(mask)}
           onClose={onClose}
-          text="placeholder"
+          text="This action cannot be reversed, are you sure you want to delete this mask?"
           submitButtonText="Delete Mask"
         />
       )}
