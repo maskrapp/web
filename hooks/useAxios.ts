@@ -5,11 +5,7 @@ import { BACKEND_URL } from "../utils/constants";
 import { useUser } from "./useUser";
 
 export const useAxios = () => {
-  const {
-    refreshToken,
-    accessToken,
-    actions: { setAccessToken },
-  } = useUser();
+  const { refreshToken, accessToken } = useUser();
 
   const axiosInstance = axios.create({
     baseURL: BACKEND_URL,
