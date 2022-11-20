@@ -1,5 +1,6 @@
 import {
   Alert,
+  AlertDescription,
   AlertIcon,
   Box,
   Button,
@@ -271,8 +272,9 @@ const VerifyCodeForm = ({ email, successFn }: VerifyCodeProps) => {
   return (
     <Box>
       <HStack mb="3">
-        <Alert status="success" variant="solid" rounded="base">
-          <AlertIcon />A code has been sent to your email.
+        <Alert status="success" rounded="base" mb="3">
+          <AlertIcon />
+          <AlertDescription>A code has been sent to {email}</AlertDescription>
         </Alert>
       </HStack>
       <form onSubmit={handleSubmit(onSubmit)}>
