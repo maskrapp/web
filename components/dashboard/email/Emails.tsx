@@ -1,6 +1,7 @@
 import {
   Button,
   Flex,
+  Spinner,
   Table,
   TableContainer,
   Tbody,
@@ -37,7 +38,10 @@ export const Emails = ({ openModalFn }: Props) => {
   return (
     <Card>
       <Flex direction="row" justifyContent="space-between" mx="6">
-        <Text>Connected emails</Text>
+        <Flex gap="2.5">
+          <Text>Connected Emails</Text>
+          <Spinner hidden={!query.isLoading} />
+        </Flex>
         <Button variant={"outline"} onClick={openModalFn}>
           Add email
         </Button>

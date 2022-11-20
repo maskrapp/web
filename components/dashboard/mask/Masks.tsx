@@ -1,6 +1,7 @@
 import {
   Button,
   Flex,
+  Spinner,
   Table,
   TableContainer,
   Tbody,
@@ -39,7 +40,10 @@ export const Masks = ({ openModalFn }: Props) => {
   return (
     <Card>
       <Flex direction="row" mx="6" justifyContent="space-between">
-        <Text>Masks</Text>
+        <Flex gap="2.5">
+          <Text>Masks</Text>
+          <Spinner hidden={!query.isLoading} />
+        </Flex>
         <Button variant={"outline"} onClick={openModalFn}>
           Create Mask
         </Button>
