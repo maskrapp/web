@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
-import { ReactNode } from "react";
+import { ReactNode, useMemo } from "react";
 import { useAxios } from "../../../hooks/useAxios";
 import { Mask } from "../../../types";
 
@@ -26,14 +26,26 @@ export const MaskStats = () => {
     {}
   );
 
-  const maskCount = !!data ? data.length : 0;
+  const maskCount = !data ? 0 : data.length;
+
+  const [messagesForwarded, messagesReceived] = useMemo(() => {
+    let forwarded = 0;
+    let received = 0;
+
+    data?.forEach((mask) => {
+      forwarded += mask.messages_forwarded;
+      received += mask.messages_received;
+    });
+
+    return [forwarded, received];
+  }, [data]);
 
   return (
     <Box maxW="7xl" mx={"auto"} pt={5}>
       <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 5, lg: 8 }}>
         <StatsCard title={"Total Masks"} stat={maskCount} />
-        <StatsCard title={"Mails forwarded"} stat={0} />
-        <StatsCard title={"Mails received"} stat={0} />
+        <StatsCard title={"Messages forwarded"} stat={messagesForwarded} />
+        <StatsCard title={"Messages received"} stat={messagesReceived} />
       </SimpleGrid>
     </Box>
   );
