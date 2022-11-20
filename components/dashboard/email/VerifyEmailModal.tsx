@@ -1,4 +1,7 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Button,
   Flex,
   HStack,
@@ -11,7 +14,6 @@ import {
   ModalOverlay,
   PinInput,
   PinInputField,
-  Text,
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -111,7 +113,10 @@ export const VerifyEmailModal = ({ closeFn, email, codeSent }: Props) => {
         <ModalHeader>Verify Email</ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
-          <Text>A code has been sent to {email}</Text>
+          <Alert status="success" rounded="base" mb="3">
+            <AlertIcon />
+            <AlertDescription>A code has been sent to {email}</AlertDescription>
+          </Alert>
           <Flex pt="5" justifyContent="center">
             <HStack>
               <PinInput
