@@ -60,7 +60,8 @@ export const Signin = () => {
       onSuccess: (data: AxiosResponse<TokenPair, any>) => {
         const { success } = pairSchema.safeParse(data.data);
         if (success) {
-          localStorage.setItem("tokens", JSON.stringify(data.data));
+          localStorage.setItem("access_token", data.data.access_token.token);
+          localStorage.setItem("refresh_token", data.data.refresh_token.token);
           actions.signIn(data.data);
           router.push("/");
         }

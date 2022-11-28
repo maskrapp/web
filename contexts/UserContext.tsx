@@ -1,15 +1,15 @@
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 
-import { Token, TokenPair } from "../types";
-import { pairSchema } from "../utils/zod";
+import { TokenPair } from "../types";
+import { tokenSchema } from "../utils/zod";
 
 interface UserContextType {
   isAuthenticated: boolean;
-  accessToken: Token | null;
-  refreshToken: Token | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   actions: {
-    setAccessToken: (token: Token) => void;
-    setRefreshToken: (token: Token) => void;
+    setAccessToken: (token: string) => void;
+    setRefreshToken: (token: string) => void;
     signIn: (pair: TokenPair) => void;
   };
 }
@@ -19,8 +19,8 @@ export const UserContext = createContext<UserContextType | undefined>(
 );
 
 export const UserContextProvider = ({ children }: PropsWithChildren) => {
-  const [refreshToken, setRefreshToken] = useState<Token | null>(null);
-  const [accessToken, setAccessToken] = useState<Token | null>(null);
+  const [refreshToken, setRefreshToken] = useState<string | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
   const [authenticated, setAuthenticated] = useState(false);
 
   const signOut = () => {
@@ -31,13 +31,11 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     window.onstorage = (e) => {
       try {
-        if (e.key === "tokens") {
+        if (e.key === "refresh_token") {
           if (!e.newValue) signOut();
-          const data: TokenPair = JSON.parse(e.newValue ?? "{}");
-          const { success } = pairSchema.safeParse(data);
+          const { success } = tokenSchema.safeParse(e.newValue);
           if (success) {
-            setRefreshToken(data.refresh_token);
-            setAccessToken(data.access_token);
+            setRefreshToken(e.newValue);
             setAuthenticated(true);
           } else {
             signOut();
@@ -53,14 +51,15 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
   }, []);
 
   useEffect(() => {
-    const tokens = localStorage.getItem("tokens");
-    if (!tokens) return;
+    const access_token = localStorage.getItem("access_token");
+    const refresh_token = localStorage.getItem("refresh_token");
+    if (!refresh_token || !access_token) return;
     try {
-      const data: TokenPair = JSON.parse(tokens);
-      const { success } = pairSchema.safeParse(data);
-      if (success) {
-        setRefreshToken(data.refresh_token);
-        setAccessToken(data.access_token);
+      const accessTokenResult = tokenSchema.safeParse(access_token);
+      const refreshTokenResult = tokenSchema.safeParse(refresh_token);
+      if (accessTokenResult.success && refreshTokenResult.success) {
+        setRefreshToken(refresh_token);
+        setAccessToken(access_token);
         setAuthenticated(true);
       }
     } catch {}
@@ -78,8 +77,8 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
         setRefreshToken(token);
       },
       signIn: (pair) => {
-        setAccessToken(pair.access_token);
-        setRefreshToken(pair.refresh_token);
+        setAccessToken(pair.access_token.token);
+        setRefreshToken(pair.refresh_token.token);
         setAuthenticated(true);
       },
     },

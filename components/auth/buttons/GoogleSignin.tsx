@@ -5,7 +5,6 @@ import { FcGoogle } from "react-icons/fc";
 import { useUser } from "../../../hooks/useUser";
 import { TokenPair } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
-import { pairSchema } from "../../../utils/zod";
 const exchangeData = async (code: string) => {
   return axios.post(`${BACKEND_URL}/auth/google`, { code });
 };
@@ -26,12 +25,10 @@ const Signin = () => {
     ux_mode: "popup",
     onSuccess: async (codeResponse) => {
       const response = await exchangeData(codeResponse.code);
-      const data: TokenPair = response.data;
-      const { success } = pairSchema.safeParse(data);
-      if (success) {
-        localStorage.setItem("tokens", JSON.stringify(data));
-        actions.signIn(data);
-      }
+      const tokens: TokenPair = response.data;
+      localStorage.setItem("access_token", tokens.access_token.token);
+      localStorage.setItem("refresh_token", tokens.refresh_token.token);
+      actions.signIn(tokens);
     },
     onError: (err) => {
       console.log("Google Login error:", err);

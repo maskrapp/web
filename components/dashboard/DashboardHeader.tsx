@@ -80,8 +80,9 @@ export const DashboardHeader = () => {
               <MenuItem
                 color="red.400"
                 onClick={() => {
-                  localStorage.removeItem("tokens");
-                  window.location.assign("/signin");
+                  localStorage.removeItem("access_token");
+                  localStorage.removeItem("refresh_token");
+                  window.location.assign("/");
                 }}
               >
                 Sign out

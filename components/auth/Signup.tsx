@@ -372,9 +372,11 @@ const CreateAccountForm = ({ email, code }: CreateAccountFormProps) => {
     }) => makeCreateAccountRequest(email, password, code, captcha_token),
     {
       onSuccess: (data: AxiosResponse<TokenPair, any>) => {
-        const { success } = pairSchema.safeParse(data.data);
+        const tokens = data.data;
+        const { success } = pairSchema.safeParse(tokens);
         if (success) {
-          localStorage.setItem("tokens", JSON.stringify(data.data));
+          localStorage.setItem("access_token", tokens.access_token.token);
+          localStorage.setItem("refresh_token", tokens.refresh_token.token);
           actions.signIn(data.data);
           router.push("/");
         }
