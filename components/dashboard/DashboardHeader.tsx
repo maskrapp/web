@@ -12,7 +12,9 @@ import {
   MenuList,
   Text,
 } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
+import { useAxios } from "../../hooks/useAxios";
 
 export const Logo = (props?: IconProps) => {
   // THIS IS A PLACEHOLDER; replace this later
@@ -36,6 +38,12 @@ export const Logo = (props?: IconProps) => {
 };
 
 export const DashboardHeader = () => {
+  const axios = useAxios();
+  const { mutateAsync } = useMutation(async () => {
+    return axios.post("/api/auth/revoke-token", {
+      refresh_token: localStorage.getItem("refresh_token"),
+    });
+  });
   return (
     <Flex
       justify="center"
@@ -85,7 +93,8 @@ export const DashboardHeader = () => {
               </Link>
               <MenuItem
                 color="red.400"
-                onClick={() => {
+                onClick={async () => {
+                  await mutateAsync();
                   localStorage.removeItem("access_token");
                   localStorage.removeItem("refresh_token");
                   window.location.assign("/");
