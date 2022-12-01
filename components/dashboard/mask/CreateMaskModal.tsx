@@ -19,7 +19,7 @@ import { AxiosError } from "axios";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useAxios } from "../../../hooks/useAxios";
-import { APIResponse, Email } from "../../../types";
+import { APIResponse, Domain, Email } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
 
 interface Props {
@@ -31,6 +31,7 @@ interface FormValues {
   email: string;
   domain: string;
 }
+
 export const CreateMaskModal = ({ closeFn }: Props) => {
   const {
     handleSubmit,
@@ -43,15 +44,20 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
   const emailRef = useRef<HTMLSelectElement>(null);
   const domainRef = useRef<HTMLSelectElement>(null);
 
+  const axios = useAxios();
+
   const emailQuery = useQuery(["emails"], async () => {
     const response = await axios.post<Email[]>("/api/user/emails");
     return response.data ?? [];
   });
 
+  const domainsQuery = useQuery(["domains"], async () => {
+    const response = await axios.get<Domain[]>("/api/user/domains");
+    return response.data ?? [];
+  });
+
   const toast = useToast();
   const queryClient = useQueryClient();
-
-  const axios = useAxios();
 
   const { mutate } = useMutation(
     (values: FormValues) => {
@@ -118,7 +124,11 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
             <FormControl>
               <FormLabel>Domain</FormLabel>
               <Select ref={domainRef}>
-                return (<option value="relay.maskr.app">relay.maskr.app</option>
+                {domainsQuery.data?.map((domain) => (
+                  <option key={domain.domain} value={domain.domain}>
+                    {domain.domain}
+                  </option>
+                ))}
                 );
               </Select>
             </FormControl>

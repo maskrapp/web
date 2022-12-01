@@ -29,3 +29,8 @@ export interface TokenPair {
   refresh_token: Token;
   access_token: Token;
 }
+
+export interface Domain {
+  domain: string;
+  free: boolean;
+}
