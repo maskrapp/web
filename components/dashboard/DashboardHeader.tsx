@@ -1,4 +1,4 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, SettingsIcon } from "@chakra-ui/icons";
 import {
   Button,
   Flex,
@@ -10,7 +10,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  useToast,
+  Text,
 } from "@chakra-ui/react";
 import Link from "next/link";
 
@@ -36,7 +36,6 @@ export const Logo = (props?: IconProps) => {
 };
 
 export const DashboardHeader = () => {
-  const toast = useToast();
   return (
     <Flex
       justify="center"
@@ -65,7 +64,6 @@ export const DashboardHeader = () => {
             }}
           >
             <NavItem name="Dashboard" href="/" />
-            <NavItem name="Settings" href="/settings" />
           </HStack>
         </HStack>
         <HStack>
@@ -77,6 +75,14 @@ export const DashboardHeader = () => {
               </HStack>
             </MenuButton>
             <MenuList>
+              <Link href="/settings">
+                <MenuItem>
+                  <HStack>
+                    <SettingsIcon />
+                    <Text>Settings</Text>
+                  </HStack>
+                </MenuItem>
+              </Link>
               <MenuItem
                 color="red.400"
                 onClick={() => {
