@@ -72,8 +72,8 @@ export const CreateEmailModal = ({ closeFn }: EmailModalProps) => {
       queryClient.setQueryData(
         ["emails"],
         [
-          ...emails,
           { email: data.email, is_primary: false, is_verified: false },
+          ...emails,
         ]
       );
       verifyEmailModal.openWithProps(data.email, true);
