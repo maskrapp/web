@@ -71,7 +71,8 @@ export const DashboardHeader = () => {
               md: 5,
             }}
           >
-            <NavItem name="Dashboard" href="/" />
+            <NavItem name="Masks" href="/" />
+            <NavItem name="Emails" href="/emails" />
           </HStack>
         </HStack>
         <HStack>

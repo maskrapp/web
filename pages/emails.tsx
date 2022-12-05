@@ -4,17 +4,16 @@ import Head from "next/head";
 import { AuthWrapper } from "../components/auth/AuthWrapper";
 import { DashboardHeader } from "../components/dashboard/DashboardHeader";
 import { CreateEmailModal } from "../components/dashboard/email/CreateEmailModal";
-import { CreateMaskModal } from "../components/dashboard/mask/CreateMaskModal";
-import { Masks } from "../components/dashboard/mask/Masks";
-import { MaskStats } from "../components/dashboard/mask/MaskStats";
+import { Emails } from "../components/dashboard/email/Emails";
+import { VerifyEmailModal } from "../components/dashboard/email/VerifyEmailModal";
 import { useModal } from "../hooks/useModal";
 
-const Index: NextPage = () => {
-  const { createMaskModal, createEmailModal } = useModal();
+const EmailPage: NextPage = () => {
+  const { createEmailModal, verifyEmailModal } = useModal();
   return (
     <>
       <Head>
-        <title>Maskr</title>
+        <title>Maskr - Emails</title>
         <meta property="og:title" content="Maskr" key="title" />
         <meta
           name="viewport"
@@ -24,11 +23,15 @@ const Index: NextPage = () => {
       </Head>
       <AuthWrapper>
         <DashboardHeader />
-        {createMaskModal.isOpen && (
-          <CreateMaskModal closeFn={createMaskModal.onClose} />
-        )}
         {createEmailModal.isOpen && (
           <CreateEmailModal closeFn={createEmailModal.onClose} />
+        )}
+        {verifyEmailModal.isOpen && (
+          <VerifyEmailModal
+            email={verifyEmailModal.email}
+            codeSent={verifyEmailModal.codeSent}
+            closeFn={verifyEmailModal.onClose}
+          />
         )}
 
         <Box
@@ -38,12 +41,11 @@ const Index: NextPage = () => {
             base: "100%",
           }}
         >
-          <MaskStats />
-          <Masks openModalFn={createMaskModal.onOpen} />
+          <Emails openModalFn={createEmailModal.onOpen} />
         </Box>
       </AuthWrapper>
     </>
   );
 };
 
-export default Index;
+export default EmailPage;
