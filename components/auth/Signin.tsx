@@ -30,7 +30,7 @@ import { pairSchema } from "../../utils/zod";
 const makeLoginRequest = (
   email: string,
   password: string,
-  captcha_token: string
+  captcha_token: string,
 ) => {
   return axios.post(`${BACKEND_URL}/auth/email-login`, {
     email,
@@ -72,7 +72,7 @@ export const Signin = () => {
           setApiError(response.message ?? "Something went wrong");
         }
       },
-    }
+    },
   );
 
   const {
@@ -184,6 +184,6 @@ export const Signin = () => {
   return (
     <ForgotPasswordForm
       goBackfn={() => setForgotPassword(false)}
-    ></ForgotPasswordForm>
+    />
   );
 };

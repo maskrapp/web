@@ -38,7 +38,6 @@ export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
   const toast = useToast();
   const queryClient = useQueryClient();
   const axios = useAxios();
-
   const deleteEmailMutation = useMutation(
     (email: string) => deleteEmail(axios, email),
     {
