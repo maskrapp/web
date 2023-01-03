@@ -24,7 +24,9 @@ export interface APIResponse {
 export interface Token {
   token: string;
   expires_at: number;
+  email_login: boolean;
 }
+
 export interface TokenPair {
   refresh_token: Token;
   access_token: Token;

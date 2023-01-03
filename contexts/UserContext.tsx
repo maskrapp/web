@@ -2,11 +2,13 @@ import { createContext, PropsWithChildren, useEffect, useState } from "react";
 
 import { TokenPair } from "../types";
 import { tokenSchema } from "../utils/zod";
+import jwt_decode from "jwt-decode";
 
 interface UserContextType {
   isAuthenticated: boolean;
   accessToken: string | null;
   refreshToken: string | null;
+  isEmailLogin: boolean;
   actions: {
     setAccessToken: (token: string) => void;
     setRefreshToken: (token: string) => void;
@@ -15,18 +17,20 @@ interface UserContextType {
 }
 
 export const UserContext = createContext<UserContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const UserContextProvider = ({ children }: PropsWithChildren) => {
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [authenticated, setAuthenticated] = useState(false);
+  const [isEmailLogin, setEmailLogin] = useState(false);
 
   const signOut = () => {
     setAccessToken(null);
     setRefreshToken(null);
     setAuthenticated(false);
+    setEmailLogin(false);
   };
   useEffect(() => {
     window.onstorage = (e) => {
@@ -58,9 +62,11 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
       const accessTokenResult = tokenSchema.safeParse(access_token);
       const refreshTokenResult = tokenSchema.safeParse(refresh_token);
       if (accessTokenResult.success && refreshTokenResult.success) {
+        const decoded = jwt_decode<{ email_login: boolean }>(refresh_token);
         setRefreshToken(refresh_token);
         setAccessToken(access_token);
         setAuthenticated(true);
+        setEmailLogin(decoded.email_login)
       }
     } catch {}
   }, []);
@@ -69,6 +75,7 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
     isAuthenticated: authenticated,
     accessToken: accessToken,
     refreshToken: refreshToken,
+    isEmailLogin: isEmailLogin,
     actions: {
       setAccessToken: (token) => {
         setAccessToken(token);
@@ -77,9 +84,9 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
         setRefreshToken(token);
       },
       signIn: (pair) => {
-        setAccessToken(pair.access_token.token);
         setRefreshToken(pair.refresh_token.token);
         setAuthenticated(true);
+        setEmailLogin(pair.refresh_token.email_login);
       },
     },
   };
