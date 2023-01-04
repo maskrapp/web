@@ -1,16 +1,5 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import {
-  Button,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Switch,
-  Td,
-  Tr,
-  useDisclosure,
-  useToast,
-} from "@chakra-ui/react";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { HStack, IconButton, Switch, Td, Tr, useDisclosure, useToast } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, AxiosInstance } from "axios";
 import { motion } from "framer-motion";
@@ -46,7 +35,7 @@ export const MaskEntry = ({ mask, email, enabled }: MaskEntryProps) => {
         const masks = queryClient.getQueryData<Mask[]>(["masks"]);
         queryClient.setQueryData(
           ["masks"],
-          masks?.filter((entry) => entry.mask !== mask)
+          masks?.filter((entry) => entry.mask !== mask),
         );
         toast({
           title: "Deleted Mask",
@@ -56,7 +45,7 @@ export const MaskEntry = ({ mask, email, enabled }: MaskEntryProps) => {
           duration: 3000,
         });
       },
-    }
+    },
   );
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -77,16 +66,18 @@ export const MaskEntry = ({ mask, email, enabled }: MaskEntryProps) => {
           <MaskEntrySwitch mask={mask} enabled={enabled} />
         </Td>
         <Td>
-          <Menu>
-            <MenuButton as={Button}>
-              <ChevronDownIcon />
-            </MenuButton>
-            <MenuList>
-              <MenuItem as="button" color="red.400" onClick={() => onOpen()}>
-                Delete
-              </MenuItem>
-            </MenuList>
-          </Menu>
+          <HStack>
+            <IconButton
+              aria-label="Edit Mask"
+              icon={<EditIcon />}
+            />
+            <IconButton
+              colorScheme="red"
+              aria-label="Delete Mask"
+              icon={<DeleteIcon />}
+              onClick={onOpen}
+            />
+          </HStack>
         </Td>
       </MotionTr>
     </>
@@ -96,7 +87,7 @@ export const MaskEntry = ({ mask, email, enabled }: MaskEntryProps) => {
 const makeUpdateStatusRequest = (
   axios: AxiosInstance,
   value: boolean,
-  mask: string
+  mask: string,
 ) => {
   return axios.put(`${BACKEND_URL}/api/user/set-mask-status`, {
     mask,
@@ -128,7 +119,7 @@ const MaskEntrySwitch = ({
         });
         setValue(!value);
       },
-    }
+    },
   );
   useEffect(() => {
     setValue(enabled);
