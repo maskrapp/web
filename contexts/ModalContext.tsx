@@ -5,20 +5,18 @@ interface ModalContextType {
   createEmailModal: useDisclosureProps;
   verifyEmailModal: useDisclosureProps & {
     email: string;
-    codeSent: boolean;
     setEmail: (email: string) => void;
-    openWithProps: (email: string, codeSent: boolean) => void;
+    openWithProps: (email: string) => void;
   };
 }
 
 export const ModalContext = createContext<ModalContextType>(
   //TODO: give this a proper value
-  null as any as ModalContextType
+  null as any as ModalContextType,
 );
 
 export const ModalContextProvider = ({ children }: PropsWithChildren) => {
   const [email, setEmail] = useState("");
-  const [codeSent, setCodeSent] = useState(false);
 
   const verifyEmailDisclosure = useDisclosure();
 
@@ -28,18 +26,15 @@ export const ModalContextProvider = ({ children }: PropsWithChildren) => {
     verifyEmailModal: {
       ...verifyEmailDisclosure,
       email: email,
-      codeSent: codeSent,
       setEmail,
-      openWithProps: (email: string, codeSent: boolean) => {
+      openWithProps: (email: string) => {
         setEmail(email);
-        setCodeSent(codeSent);
         verifyEmailDisclosure.onOpen();
       },
     },
   };
-  return (
-    <ModalContext.Provider value={value}>{children}</ModalContext.Provider>
-  );
+  return <ModalContext.Provider value={value}>{children}
+  </ModalContext.Provider>;
 };
 
 interface useDisclosureProps {

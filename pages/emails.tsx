@@ -29,7 +29,6 @@ const EmailPage: NextPage = () => {
         {verifyEmailModal.isOpen && (
           <VerifyEmailModal
             email={verifyEmailModal.email}
-            codeSent={verifyEmailModal.codeSent}
             closeFn={verifyEmailModal.onClose}
           />
         )}

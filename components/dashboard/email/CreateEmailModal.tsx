@@ -14,7 +14,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import { AxiosError, AxiosInstance } from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import { useAxios } from "../../../hooks/useAxios";
@@ -30,6 +30,17 @@ interface EmailModalProps {
   finalRef?: React.RefObject<Focusable>;
   closeFn: () => void;
 }
+
+const requestNewCode = (axios: AxiosInstance, email: string) => {
+  try {
+    const response = axios.post(`${BACKEND_URL}/api/user/request-code`, {
+      email,
+    });
+    return { ...response, email: email };
+  } catch (e) {
+    throw e;
+  }
+};
 
 export const CreateEmailModal = ({ closeFn }: EmailModalProps) => {
   interface FormValues {
@@ -49,10 +60,10 @@ export const CreateEmailModal = ({ closeFn }: EmailModalProps) => {
 
   const makeEmailRequest = async (email: string) => {
     try {
-      const response = await axios.post(`${BACKEND_URL}/api/user/add-email`, {
+      await axios.post(`${BACKEND_URL}/api/user/add-email`, {
         email,
       });
-      return { ...response, email: email };
+      return { email: email };
     } catch (e) {
       throw e;
     }
@@ -60,11 +71,19 @@ export const CreateEmailModal = ({ closeFn }: EmailModalProps) => {
 
   const queryClient = useQueryClient();
 
+  const requestCodeMutation = useMutation(
+    (email: string) => requestNewCode(axios, email),
+    {
+      onSuccess: (data: any) => {
+        verifyEmailModal.openWithProps(data.email);
+      },
+    },
+  );
+
   const { mutate } = useMutation((email: string) => makeEmailRequest(email), {
     onSuccess: (data) => {
       toast({
         title: "Email added",
-        description: "Check your mailbox for a verification code",
         status: "success",
         position: "top",
       });
@@ -74,9 +93,9 @@ export const CreateEmailModal = ({ closeFn }: EmailModalProps) => {
         [
           { email: data.email, is_primary: false, is_verified: false },
           ...emails,
-        ]
+        ],
       );
-      verifyEmailModal.openWithProps(data.email, true);
+      requestCodeMutation.mutate(data.email);
     },
     onError: (data: AxiosError<APIResponse, any>) => {
       toast({

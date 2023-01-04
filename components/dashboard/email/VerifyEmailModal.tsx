@@ -16,9 +16,9 @@ import {
   PinInputField,
   useToast,
 } from "@chakra-ui/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, AxiosInstance } from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useAxios } from "../../../hooks/useAxios";
 import { APIResponse, Email } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
@@ -40,25 +40,25 @@ const verifyCode = (axios: AxiosInstance, email: string, code: string) => {
 interface Props {
   closeFn: () => void;
   email: string;
-  codeSent: boolean;
 }
 
-export const VerifyEmailModal = ({ closeFn, email, codeSent }: Props) => {
+export const VerifyEmailModal = ({ closeFn, email }: Props) => {
   const axios = useAxios();
   const toast = useToast();
   const firstInputRef = useRef<HTMLInputElement>(null);
 
-  const requestCodeMutation = useMutation(() => requestNewCode(axios, email), {
+  const { mutate, isLoading } = useMutation(() => requestNewCode(axios, email), {
     onError: (data: AxiosError<APIResponse, any>) => {
       toast({
         title: "Error",
         description: data.response?.data?.message,
         status: "error",
-        position: "top",
+        position: "bottom",
         isClosable: true,
       });
     },
   });
+
   const queryClient = useQueryClient();
   const verifyCodeMutation = useMutation(
     (code: string) => verifyCode(axios, email, code),
@@ -95,14 +95,8 @@ export const VerifyEmailModal = ({ closeFn, email, codeSent }: Props) => {
         queryClient.setQueryData(["emails"], emails);
         closeFn();
       },
-    }
+    },
   );
-
-  useEffect(() => {
-    if (!codeSent) {
-      requestCodeMutation.mutate();
-    }
-  }, [codeSent, requestCodeMutation]);
 
   const [code, setCode] = useState<string>();
 
@@ -150,8 +144,9 @@ export const VerifyEmailModal = ({ closeFn, email, codeSent }: Props) => {
           <Flex direction="row" justifyContent="space-between">
             <Button
               variant="link"
+              isLoading={isLoading}
               onClick={() => {
-                requestCodeMutation.mutate();
+                mutate();
               }}
             >
               Re-send code

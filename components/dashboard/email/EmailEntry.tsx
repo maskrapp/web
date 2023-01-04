@@ -24,6 +24,12 @@ const deleteEmail = (axios: AxiosInstance, email: string) => {
   });
 };
 
+const requestNewCode = (axios: AxiosInstance, email: string) => {
+  return axios.post(`${BACKEND_URL}/api/user/request-code`, {
+    email,
+  });
+};
+
 const MotionTr = motion(Tr);
 
 interface Props {
@@ -67,6 +73,19 @@ export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
   const confirmationModalDisclosure = useDisclosure();
   const modal = useModal();
 
+  const { mutate, isLoading } = useMutation(() => requestNewCode(axios, email), {
+    onSuccess: () => modal.verifyEmailModal.openWithProps(email),
+    onError: (data: AxiosError<APIResponse, any>) => {
+      toast({
+        title: "Error",
+        description: data.response?.data?.message,
+        status: "error",
+        position: "top",
+        isClosable: true,
+      });
+    },
+  });
+
   return (
     <>
       {confirmationModalDisclosure.isOpen && (
@@ -91,7 +110,8 @@ export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
                 aria-label="Verify Email"
                 colorScheme="green"
                 icon={<CheckIcon />}
-                onClick={() => modal.verifyEmailModal.openWithProps(email, false)}
+                isLoading={isLoading}
+                onClick={() => mutate()}
               />
             )}
             <IconButton
