@@ -1,11 +1,9 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { CheckIcon, ChevronDownIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
-  Button,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
+  HStack,
+  IconButton,
   Td,
+  Text,
   Tr,
   useDisclosure,
   useToast,
@@ -45,7 +43,7 @@ export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
         const data: Email[] = queryClient.getQueryData(["emails"]) ?? [];
         queryClient.setQueryData(
           ["emails"],
-          data.filter((value) => value.email !== email)
+          data.filter((value) => value.email !== email),
         );
         toast({
           title: "Deleted Email",
@@ -63,7 +61,7 @@ export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
           isClosable: true,
         });
       },
-    }
+    },
   );
 
   const confirmationModalDisclosure = useDisclosure();
@@ -81,31 +79,29 @@ export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
       )}
       <MotionTr initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         <Td>{email}</Td>
-        <Td>{is_verified ? "Verified" : "Unverified"}</Td>
         <Td>
-          <Menu>
-            <MenuButton as={Button} disabled={is_primary}>
-              <ChevronDownIcon />
-            </MenuButton>
-            <MenuList>
-              {!is_verified && (
-                <MenuItem
-                  onClick={() => {
-                    modal.verifyEmailModal.openWithProps(email, false);
-                  }}
-                >
-                  Verify
-                </MenuItem>
-              )}
-              <MenuItem
-                as="button"
-                color="red.400"
-                onClick={() => confirmationModalDisclosure.onOpen()}
-              >
-                Delete
-              </MenuItem>
-            </MenuList>
-          </Menu>
+          {is_verified
+            ? <Text color="green.300">Verified</Text>
+            : <Text color="red.300">Unverified</Text>}
+        </Td>
+        <Td>
+          <HStack>
+            {!is_verified && (
+              <IconButton
+                aria-label="Verify Email"
+                colorScheme="green"
+                icon={<CheckIcon />}
+                onClick={() => modal.verifyEmailModal.openWithProps(email, false)}
+              />
+            )}
+            <IconButton
+              colorScheme="red"
+              aria-label="Delete Email"
+              icon={<DeleteIcon />}
+              disabled={is_primary}
+              onClick={confirmationModalDisclosure.onOpen}
+            />
+          </HStack>
         </Td>
       </MotionTr>
     </>
