@@ -4,6 +4,8 @@ import {
   FormHelperText,
   FormLabel,
   Input,
+  InputGroup,
+  InputRightAddon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -12,17 +14,18 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
+  Stack,
+  Text,
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { fetchEmails } from "../../../api/email";
 import { addMask, fetchDomains } from "../../../api/mask";
 import { useAxios } from "../../../hooks/useAxios";
-import { APIResponse, Domain, Email } from "../../../types";
-import { BACKEND_URL } from "../../../utils/constants";
+import { APIResponse } from "../../../types";
 
 interface Props {
   closeFn: () => void;
@@ -38,7 +41,6 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
   const {
     handleSubmit,
     register,
-    watch,
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>();
@@ -48,8 +50,14 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
 
   const axios = useAxios();
 
+  const [domain, setDomain] = useState("");
+
   const emailQuery = useQuery(["emails"], () => fetchEmails(axios));
-  const domainsQuery = useQuery(["domains"], () => fetchDomains(axios));
+  const domainsQuery = useQuery(["domains"], () => fetchDomains(axios), {
+    onSuccess: (data) => {
+      setDomain(data[0].domain);
+    },
+  });
 
   const toast = useToast();
   const queryClient = useQueryClient();
@@ -58,11 +66,6 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
     (values: FormValues) => addMask(axios, values),
     {
       onSuccess: () => {
-        toast({
-          title: "Created mask",
-          status: "success",
-          position: "top",
-        });
         closeFn();
         queryClient.invalidateQueries(["masks"]);
       },
@@ -82,7 +85,6 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
   const onSubmit = (data: FormValues) => {
     mutate(data);
   };
-  const name = watch("name");
   return (
     // isOpen state is managed outside of the component
     <Modal isOpen={true} onClose={closeFn}>
@@ -94,29 +96,31 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
           <ModalBody pb={6}>
             <FormControl isInvalid={!!errors.name}>
               <FormLabel>Name</FormLabel>
-              <Input
-                type="text"
-                {...register("name", {
-                  pattern: new RegExp(
-                    "^(?=[a-zA-Z0-9._]{3,24}$)(?!.*[_.]{2})[^_.].*[^_.]$",
-                  ),
-                  required: true,
-                })}
-                autoFocus
-                name="name"
-              />
-              {!errors.name && !!name && (
-                <FormHelperText>
-                  {"Your masked email adres will be: " +
-                    name.toLowerCase() +
-                    "@" +
-                    domainRef.current!.value}
-                </FormHelperText>
-              )}
+              <Stack spacing={4}>
+                <InputGroup>
+                  <Input
+                    type="text"
+                    {...register("name", {
+                      pattern: new RegExp(
+                        "^(?=[a-zA-Z0-9._]{3,24}$)(?!.*[_.]{2})[^_.].*[^_.]$",
+                      ),
+                      required: true,
+                    })}
+                    autoFocus
+                    name="name"
+                  />
+                  <InputRightAddon>
+                    <Text>@{domain}</Text>
+                  </InputRightAddon>
+                </InputGroup>
+              </Stack>
             </FormControl>
             <FormControl>
               <FormLabel>Domain</FormLabel>
-              <Select ref={domainRef}>
+              <Select
+                ref={domainRef}
+                onChange={(e) => setDomain(e.target.value)}
+              >
                 {domainsQuery.data?.map((domain) => (
                   <option key={domain.domain} value={domain.domain}>
                     {domain.domain}
