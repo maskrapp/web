@@ -28,8 +28,13 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useUser } from "../../hooks/useUser";
 import { APIResponse, TokenPair } from "../../types";
-import { BACKEND_URL } from "../../utils/constants";
 import { pairSchema } from "../../utils/zod";
+import {
+  createAccount,
+  createAccountCode,
+  resendCode,
+  verifyAccountCode,
+} from "../../api/user";
 
 export const SignUp = () => {
   const [step, setStep] = useState(0);
@@ -86,21 +91,6 @@ export const SignUp = () => {
   );
 };
 
-const makeCodeRequest = async (email: string, captcha_token: string) => {
-  try {
-    const response = await axios.post(
-      `${BACKEND_URL}/auth/create-account-code`,
-      {
-        email,
-        captcha_token,
-      },
-    );
-    return { ...response, email: email };
-  } catch (e) {
-    throw e;
-  }
-};
-
 interface EmailFormProps {
   successFn: (email: string) => void;
 }
@@ -115,7 +105,7 @@ const EmailForm = ({ successFn }: EmailFormProps) => {
   } = useForm<{ email: string }>();
   const { mutate } = useMutation(
     ({ email, captcha_token }: { email: string; captcha_token: string }) =>
-      makeCodeRequest(email, captcha_token),
+      createAccountCode(axios, { email, captcha_token }),
     {
       onSuccess: (data) => {
         successFn(data.email);
@@ -183,33 +173,6 @@ const EmailForm = ({ successFn }: EmailFormProps) => {
   );
 };
 
-const makeVerifyCodeRequest = async (
-  email: string,
-  code: string,
-  captcha_token: string,
-) => {
-  try {
-    const response = await axios.post(
-      `${BACKEND_URL}/auth/verify-account-code`,
-      {
-        email,
-        code,
-        captcha_token,
-      },
-    );
-    return { ...response, code };
-  } catch (e) {
-    throw e;
-  }
-};
-
-const makeResendCodeRequest = (email: string, captcha_token: string) => {
-  return axios.post(`${BACKEND_URL}/auth/resend-account-code`, {
-    email,
-    captcha_token,
-  });
-};
-
 interface VerifyCodeProps {
   email: string;
   successFn: (code: string) => void;
@@ -220,7 +183,7 @@ const VerifyCodeForm = ({ email, successFn }: VerifyCodeProps) => {
     handleSubmit,
     register,
     setError,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<{ code: string }>();
 
   const toast = useToast();
@@ -228,7 +191,7 @@ const VerifyCodeForm = ({ email, successFn }: VerifyCodeProps) => {
 
   const verifyCodeMutation = useMutation(
     ({ code, captcha_token }: { code: string; captcha_token: string }) =>
-      makeVerifyCodeRequest(email, code, captcha_token),
+      verifyAccountCode(axios, { email, code, captcha_token }),
     {
       onSuccess: (data) => {
         successFn(data.code);
@@ -246,7 +209,7 @@ const VerifyCodeForm = ({ email, successFn }: VerifyCodeProps) => {
   );
 
   const resendCodeMutation = useMutation(
-    (captcha_token: string) => makeResendCodeRequest(email, captcha_token),
+    (captcha_token: string) => resendCode(axios, { email, captcha_token }),
     {
       onSuccess: () => {
         toast({
@@ -324,6 +287,7 @@ const VerifyCodeForm = ({ email, successFn }: VerifyCodeProps) => {
 };
 
 interface CreateAccountFormValues {
+  name: string;
   password: string;
   confirmPassword: string;
 }
@@ -332,20 +296,6 @@ interface CreateAccountFormProps {
   email: string;
   code: string;
 }
-
-const makeCreateAccountRequest = (
-  email: string,
-  password: string,
-  code: string,
-  captcha_token: string,
-) => {
-  return axios.post(`${BACKEND_URL}/auth/create-account`, {
-    email,
-    password,
-    code,
-    captcha_token,
-  });
-};
 
 const CreateAccountForm = ({ email, code }: CreateAccountFormProps) => {
   const {
@@ -359,16 +309,18 @@ const CreateAccountForm = ({ email, code }: CreateAccountFormProps) => {
   const { actions } = useUser();
   const { mutate } = useMutation(
     ({
+      name,
       email,
       password,
       code,
       captcha_token,
     }: {
+      name: string;
       email: string;
       password: string;
       code: string;
       captcha_token: string;
-    }) => makeCreateAccountRequest(email, password, code, captcha_token),
+    }) => createAccount(axios, { name, email, password, code, captcha_token }),
     {
       onSuccess: (data: AxiosResponse<TokenPair, any>) => {
         const tokens = data.data;
@@ -388,6 +340,7 @@ const CreateAccountForm = ({ email, code }: CreateAccountFormProps) => {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
   const onSubmit: SubmitHandler<CreateAccountFormValues> = async ({
+    name,
     password,
   }) => {
     if (!executeRecaptcha) {
@@ -395,12 +348,24 @@ const CreateAccountForm = ({ email, code }: CreateAccountFormProps) => {
       return;
     }
     const captcha_token = await executeRecaptcha("create_account");
-    mutate({ email, password, code, captcha_token });
+    mutate({ name, email, password, code, captcha_token });
   };
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
         <VStack spacing={2}>
+          <FormControl isInvalid={!!errors.name}>
+            <FormLabel>Name</FormLabel>
+            <Input
+              type="name"
+              {...register("name", {
+                maxLength: 64,
+              })}
+            />
+            <FormErrorMessage>
+              {errors.password && errors.password.message}
+            </FormErrorMessage>
+          </FormControl>
           <FormControl isInvalid={!!errors.password}>
             <FormLabel>Password</FormLabel>
             <Input
