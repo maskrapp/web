@@ -1,9 +1,9 @@
 import { Box } from "@chakra-ui/react";
 import { NextPage } from "next";
 import Head from "next/head";
-import { AuthWrapper } from "../components/auth/AuthWrapper";
-import { DashboardHeader } from "../components/dashboard/DashboardHeader";
-import { SettingsCard } from "../components/dashboard/settings/SettingsCard";
+import { AuthWrapper } from "../../components/auth/AuthWrapper";
+import { DashboardHeader } from "../../components/dashboard/DashboardHeader";
+import { SettingsCard } from "../../components/dashboard/settings/SettingsCard";
 
 const Settings: NextPage = () => {
   return (
