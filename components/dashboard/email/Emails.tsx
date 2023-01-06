@@ -11,6 +11,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { fetchEmails } from "../../../api/email";
 
 import { useAxios } from "../../../hooks/useAxios";
 import { Email } from "../../../types";
@@ -24,16 +25,10 @@ interface Props {
 export const Emails = ({ openModalFn }: Props) => {
   const axios = useAxios();
 
-  const fetchEmails = async () => {
-    const response = await axios.post<Email[]>("/api/user/emails");
-    return response.data ?? [];
-  };
-  const query = useQuery<Email[], Error>(["emails"], fetchEmails, {
+  const query = useQuery<Email[]>(["emails"], () => fetchEmails(axios), {
     cacheTime: 3600,
     refetchOnMount: false,
   });
-
-  const emails = query.data ?? [];
 
   return (
     <Card>
@@ -56,7 +51,7 @@ export const Emails = ({ openModalFn }: Props) => {
             </Tr>
           </Thead>
           <Tbody>
-            {emails.map((email) => (
+            {query.data?.map((email) => (
               <EmailEntry
                 key={email.email}
                 email={email.email}

@@ -1,4 +1,4 @@
-import { CheckIcon, ChevronDownIcon, DeleteIcon } from "@chakra-ui/icons";
+import { CheckIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
   HStack,
   IconButton,
@@ -9,26 +9,14 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosInstance } from "axios";
+import { AxiosError } from "axios";
 import { motion } from "framer-motion";
+import { deleteEmail, requestNewCode } from "../../../api/email";
 
 import { useAxios } from "../../../hooks/useAxios";
 import { useModal } from "../../../hooks/useModal";
 import { APIResponse, Email } from "../../../types";
-import { BACKEND_URL } from "../../../utils/constants";
 import { ConfirmationModal } from "../ConfirmationModal";
-
-const deleteEmail = (axios: AxiosInstance, email: string) => {
-  return axios.delete(`${BACKEND_URL}/api/user/delete-email`, {
-    data: { email },
-  });
-};
-
-const requestNewCode = (axios: AxiosInstance, email: string) => {
-  return axios.post(`${BACKEND_URL}/api/user/request-code`, {
-    email,
-  });
-};
 
 const MotionTr = motion(Tr);
 
@@ -73,18 +61,21 @@ export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
   const confirmationModalDisclosure = useDisclosure();
   const modal = useModal();
 
-  const { mutate, isLoading } = useMutation(() => requestNewCode(axios, email), {
-    onSuccess: () => modal.verifyEmailModal.openWithProps(email),
-    onError: (data: AxiosError<APIResponse, any>) => {
-      toast({
-        title: "Error",
-        description: data.response?.data?.message,
-        status: "error",
-        position: "top",
-        isClosable: true,
-      });
+  const { mutate, isLoading } = useMutation(
+    () => requestNewCode(axios, email),
+    {
+      onSuccess: () => modal.verifyEmailModal.openWithProps(email),
+      onError: (data: AxiosError<APIResponse, any>) => {
+        toast({
+          title: "Error",
+          description: data.response?.data?.message,
+          status: "error",
+          position: "top",
+          isClosable: true,
+        });
+      },
     },
-  });
+  );
 
   return (
     <>

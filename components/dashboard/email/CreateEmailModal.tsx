@@ -14,8 +14,9 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosInstance } from "axios";
+import { AxiosError } from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { addEmail, requestNewCode } from "../../../api/email";
 
 import { useAxios } from "../../../hooks/useAxios";
 import { useModal } from "../../../hooks/useModal";
@@ -30,17 +31,6 @@ interface EmailModalProps {
   finalRef?: React.RefObject<Focusable>;
   closeFn: () => void;
 }
-
-const requestNewCode = (axios: AxiosInstance, email: string) => {
-  try {
-    const response = axios.post(`${BACKEND_URL}/api/user/request-code`, {
-      email,
-    });
-    return { ...response, email: email };
-  } catch (e) {
-    throw e;
-  }
-};
 
 export const CreateEmailModal = ({ closeFn }: EmailModalProps) => {
   interface FormValues {
@@ -58,17 +48,6 @@ export const CreateEmailModal = ({ closeFn }: EmailModalProps) => {
 
   const { verifyEmailModal } = useModal();
 
-  const makeEmailRequest = async (email: string) => {
-    try {
-      await axios.post(`${BACKEND_URL}/api/user/add-email`, {
-        email,
-      });
-      return { email: email };
-    } catch (e) {
-      throw e;
-    }
-  };
-
   const queryClient = useQueryClient();
 
   const requestCodeMutation = useMutation(
@@ -80,7 +59,7 @@ export const CreateEmailModal = ({ closeFn }: EmailModalProps) => {
     },
   );
 
-  const { mutate } = useMutation((email: string) => makeEmailRequest(email), {
+  const { mutate } = useMutation((email: string) => addEmail(axios, email), {
     onSuccess: (data) => {
       toast({
         title: "Email added",

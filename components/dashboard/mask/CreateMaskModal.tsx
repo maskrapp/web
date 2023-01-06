@@ -18,6 +18,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
+import { fetchEmails } from "../../../api/email";
+import { addMask, fetchDomains } from "../../../api/mask";
 import { useAxios } from "../../../hooks/useAxios";
 import { APIResponse, Domain, Email } from "../../../types";
 import { BACKEND_URL } from "../../../utils/constants";
@@ -46,23 +48,14 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
 
   const axios = useAxios();
 
-  const emailQuery = useQuery(["emails"], async () => {
-    const response = await axios.post<Email[]>("/api/user/emails");
-    return response.data ?? [];
-  });
-
-  const domainsQuery = useQuery(["domains"], async () => {
-    const response = await axios.get<Domain[]>("/api/user/domains");
-    return response.data ?? [];
-  });
+  const emailQuery = useQuery(["emails"], () => fetchEmails(axios));
+  const domainsQuery = useQuery(["domains"], () => fetchDomains(axios));
 
   const toast = useToast();
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation(
-    (values: FormValues) => {
-      return axios.post(`${BACKEND_URL}/api/user/add-mask`, values);
-    },
+    (values: FormValues) => addMask(axios, values),
     {
       onSuccess: () => {
         toast({
@@ -83,7 +76,7 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
         });
         closeFn();
       },
-    }
+    },
   );
 
   const onSubmit = (data: FormValues) => {
@@ -105,7 +98,7 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
                 type="text"
                 {...register("name", {
                   pattern: new RegExp(
-                    "^(?=[a-zA-Z0-9._]{3,24}$)(?!.*[_.]{2})[^_.].*[^_.]$"
+                    "^(?=[a-zA-Z0-9._]{3,24}$)(?!.*[_.]{2})[^_.].*[^_.]$",
                   ),
                   required: true,
                 })}
@@ -138,7 +131,7 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
               <Select ref={emailRef}>
                 {emailQuery.data
                   ?.filter((email) => email.is_verified)
-                  .map((email, index) => {
+                  .map((email) => {
                     return (
                       <option key={email.email} value={email.email}>
                         {email.email}

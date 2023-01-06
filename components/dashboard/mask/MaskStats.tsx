@@ -8,22 +8,16 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { AxiosInstance } from "axios";
 import { ReactNode, useMemo } from "react";
+import { fetchMasks } from "../../../api/mask";
 import { useAxios } from "../../../hooks/useAxios";
 import { Mask } from "../../../types";
-
-const fetchMasks = async (axios: AxiosInstance) => {
-  const response = await axios.post<Mask[]>("/api/user/masks");
-  return response.data ?? [];
-};
 
 export const MaskStats = () => {
   const axios = useAxios();
   const { data } = useQuery<Mask[], Error>(
     ["masks"],
     () => fetchMasks(axios),
-    {}
   );
 
   const maskCount = !data ? 0 : data.length;

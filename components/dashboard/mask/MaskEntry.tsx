@@ -1,13 +1,21 @@
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { HStack, IconButton, Switch, Td, Tr, useDisclosure, useToast } from "@chakra-ui/react";
+import {
+  HStack,
+  IconButton,
+  Switch,
+  Td,
+  Tr,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosInstance } from "axios";
+import { AxiosError } from "axios";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { deleteMask, setMaskStatus } from "../../../api/mask";
 
 import { useAxios } from "../../../hooks/useAxios";
 import { APIResponse, Mask } from "../../../types";
-import { BACKEND_URL } from "../../../utils/constants";
 import { ConfirmationModal } from "../ConfirmationModal";
 
 interface MaskEntryProps {
@@ -20,16 +28,11 @@ const MotionTr = motion(Tr);
 
 export const MaskEntry = ({ mask, email, enabled }: MaskEntryProps) => {
   const axios = useAxios();
-  const makeDeleteMaskRequest = (mask: string) => {
-    return axios.delete(`${BACKEND_URL}/api/user/delete-mask`, {
-      data: { mask: mask },
-    });
-  };
 
   const toast = useToast();
   const queryClient = useQueryClient();
   const { mutate } = useMutation(
-    (mask: string) => makeDeleteMaskRequest(mask),
+    (mask: string) => deleteMask(axios, mask),
     {
       onSuccess: () => {
         const masks = queryClient.getQueryData<Mask[]>(["masks"]);
@@ -84,17 +87,6 @@ export const MaskEntry = ({ mask, email, enabled }: MaskEntryProps) => {
   );
 };
 
-const makeUpdateStatusRequest = (
-  axios: AxiosInstance,
-  value: boolean,
-  mask: string,
-) => {
-  return axios.put(`${BACKEND_URL}/api/user/set-mask-status`, {
-    mask,
-    value,
-  });
-};
-
 const MaskEntrySwitch = ({
   enabled,
   mask,
@@ -106,7 +98,7 @@ const MaskEntrySwitch = ({
   const toast = useToast();
   const { mutate } = useMutation(
     ({ value, mask }: Pick<MaskEntryProps, "mask"> & { value: boolean }) => {
-      return makeUpdateStatusRequest(axios, value, mask);
+      return setMaskStatus(axios, { mask, value });
     },
     {
       onError: (data: AxiosError<APIResponse, any>) => {

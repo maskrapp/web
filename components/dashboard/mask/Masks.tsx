@@ -12,17 +12,12 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { AxiosInstance } from "axios";
+import { fetchMasks } from "../../../api/mask";
 
 import { useAxios } from "../../../hooks/useAxios";
 import { Mask } from "../../../types";
 import { Card } from "../../shared/Card";
 import { MaskEntry } from "./MaskEntry";
-
-const fetchMasks = async (axios: AxiosInstance) => {
-  const response = await axios.post<Mask[]>("/api/user/masks");
-  return response.data;
-};
 
 interface Props {
   openModalFn: () => void;
@@ -31,18 +26,20 @@ interface Props {
 export const Masks = ({ openModalFn }: Props) => {
   const axios = useAxios();
 
-  const query = useQuery<Mask[], Error>(["masks"], () => fetchMasks(axios), {
-    refetchOnMount: true,
-  });
-
-  const masks = query.data ?? [];
+  const { data, isLoading } = useQuery<Mask[], Error>(
+    ["masks"],
+    () => fetchMasks(axios),
+    {
+      refetchOnMount: true,
+    },
+  );
 
   return (
     <Card>
       <Flex direction="row" mx="6" justifyContent="space-between">
         <Flex gap="2.5">
           <Text>Masks</Text>
-          <Spinner hidden={!query.isLoading} />
+          <Spinner hidden={!isLoading} />
         </Flex>
         <Button variant={"outline"} onClick={openModalFn}>
           Create Mask
@@ -58,7 +55,7 @@ export const Masks = ({ openModalFn }: Props) => {
             </Tr>
           </Thead>
           <Tbody>
-            {masks.map((mask) => (
+            {data?.map((mask) => (
               <MaskEntry
                 key={mask.mask}
                 email={mask.email}
