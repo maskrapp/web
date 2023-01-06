@@ -4,6 +4,7 @@ import {
   IconButton,
   Td,
   Text,
+  Tooltip,
   Tr,
   useDisclosure,
   useToast,
@@ -105,13 +106,31 @@ export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
                 onClick={() => mutate()}
               />
             )}
-            <IconButton
-              colorScheme="red"
-              aria-label="Delete Email"
-              icon={<DeleteIcon />}
-              disabled={is_primary}
-              onClick={confirmationModalDisclosure.onOpen}
-            />
+            {is_primary
+              ? (
+                <Tooltip
+                  bg="red.200"
+                  placement="bottom-start"
+                  label="You cannot delete your primary email"
+                  aria-label="You cannot delete your primary email"
+                >
+                  <IconButton
+                    disabled
+                    colorScheme="red"
+                    aria-label="Delete Email"
+                    icon={<DeleteIcon />}
+                    onClick={confirmationModalDisclosure.onOpen}
+                  />
+                </Tooltip>
+              )
+              : (
+                <IconButton
+                  colorScheme="red"
+                  aria-label="Delete Email"
+                  icon={<DeleteIcon />}
+                  onClick={confirmationModalDisclosure.onOpen}
+                />
+              )}
           </HStack>
         </Td>
       </MotionTr>
