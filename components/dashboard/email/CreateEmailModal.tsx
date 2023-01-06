@@ -61,11 +61,6 @@ export const CreateEmailModal = ({ closeFn }: EmailModalProps) => {
 
   const { mutate } = useMutation((email: string) => addEmail(axios, email), {
     onSuccess: (data) => {
-      toast({
-        title: "Email added",
-        status: "success",
-        position: "top",
-      });
       const emails: Email[] = queryClient.getQueryData(["emails"]) ?? [];
       queryClient.setQueryData(
         ["emails"],

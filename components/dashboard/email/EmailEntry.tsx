@@ -40,12 +40,6 @@ export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
           ["emails"],
           data.filter((value) => value.email !== email),
         );
-        toast({
-          title: "Deleted Email",
-          status: "success",
-          position: "top",
-          isClosable: true,
-        });
       },
       onError: (data: AxiosError<APIResponse>) => {
         toast({

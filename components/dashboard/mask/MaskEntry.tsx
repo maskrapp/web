@@ -29,7 +29,6 @@ const MotionTr = motion(Tr);
 export const MaskEntry = ({ mask, email, enabled }: MaskEntryProps) => {
   const axios = useAxios();
 
-  const toast = useToast();
   const queryClient = useQueryClient();
   const { mutate } = useMutation(
     (mask: string) => deleteMask(axios, mask),
@@ -40,13 +39,6 @@ export const MaskEntry = ({ mask, email, enabled }: MaskEntryProps) => {
           ["masks"],
           masks?.filter((entry) => entry.mask !== mask),
         );
-        toast({
-          title: "Deleted Mask",
-          status: "success",
-          position: "top",
-          isClosable: true,
-          duration: 3000,
-        });
       },
     },
   );
