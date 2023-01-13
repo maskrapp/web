@@ -19,17 +19,6 @@ export const AccountSection = () => {
     <Box w="25em">
       <Stack>
         <Box>
-          <FormLabel>Display Name</FormLabel>
-          <Flex direction="row" gap="3">
-            <Input type="text" isReadOnly value={data?.name} />
-            <IconButton
-              aria-label="Change Name"
-              icon={<EditIcon />}
-              disabled
-            />
-          </Flex>
-        </Box>
-        <Box>
           <FormLabel>Email</FormLabel>
           <Flex direction="row" gap="3">
             <Input type="email" isReadOnly value={data?.email} />
