@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { fetchEmails } from "../../../api/email";
 import { addMask, fetchDomains } from "../../../api/mask";
@@ -42,7 +42,7 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
     handleSubmit,
     register,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<FormValues>();
 
   const emailRef = useRef<HTMLSelectElement>(null);
@@ -62,7 +62,7 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
   const toast = useToast();
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     (values: FormValues) => addMask(axios, values),
     {
       onSuccess: () => {
@@ -150,7 +150,7 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
               colorScheme="blue"
               mr={3}
               type="submit"
-              isLoading={isSubmitting}
+              isLoading={isLoading}
               onClick={() => {
                 setValue("domain", domainRef!.current!.value);
                 setValue("email", emailRef!.current!.value);

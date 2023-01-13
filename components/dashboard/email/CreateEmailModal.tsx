@@ -21,7 +21,6 @@ import { addEmail, requestNewCode } from "../../../api/email";
 import { useAxios } from "../../../hooks/useAxios";
 import { useModal } from "../../../hooks/useModal";
 import { APIResponse, Email } from "../../../types";
-import { BACKEND_URL } from "../../../utils/constants";
 
 interface Focusable {
   focus: () => void;
@@ -32,15 +31,15 @@ interface EmailModalProps {
   closeFn: () => void;
 }
 
-export const CreateEmailModal = ({ closeFn }: EmailModalProps) => {
-  interface FormValues {
-    email: string;
-  }
+interface FormValues {
+  email: string;
+}
 
+export const CreateEmailModal = ({ closeFn }: EmailModalProps) => {
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<FormValues>();
 
   const toast = useToast();
@@ -59,28 +58,31 @@ export const CreateEmailModal = ({ closeFn }: EmailModalProps) => {
     },
   );
 
-  const { mutate } = useMutation((email: string) => addEmail(axios, email), {
-    onSuccess: (data) => {
-      const emails: Email[] = queryClient.getQueryData(["emails"]) ?? [];
-      queryClient.setQueryData(
-        ["emails"],
-        [
-          { email: data.email, is_primary: false, is_verified: false },
-          ...emails,
-        ],
-      );
-      requestCodeMutation.mutate(data.email);
+  const { mutate, isLoading } = useMutation(
+    (email: string) => addEmail(axios, email),
+    {
+      onSuccess: (data) => {
+        const emails: Email[] = queryClient.getQueryData(["emails"]) ?? [];
+        queryClient.setQueryData(
+          ["emails"],
+          [
+            { email: data.email, is_primary: false, is_verified: false },
+            ...emails,
+          ],
+        );
+        requestCodeMutation.mutate(data.email);
+      },
+      onError: (data: AxiosError<APIResponse, any>) => {
+        toast({
+          title: "Error",
+          description: data.response?.data.message,
+          status: "error",
+          position: "top",
+          isClosable: true,
+        });
+      },
     },
-    onError: (data: AxiosError<APIResponse, any>) => {
-      toast({
-        title: "Error",
-        description: data.response?.data.message,
-        status: "error",
-        position: "top",
-        isClosable: true,
-      });
-    },
-  });
+  );
 
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
     if (!values.email) return;
@@ -121,7 +123,7 @@ export const CreateEmailModal = ({ closeFn }: EmailModalProps) => {
               colorScheme="blue"
               mr={3}
               type="submit"
-              isLoading={isSubmitting}
+              isLoading={isLoading}
             >
               Add
             </Button>
