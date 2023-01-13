@@ -350,6 +350,10 @@ const CreateAccountForm = ({ email, code }: CreateAccountFormProps) => {
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
         <VStack spacing={2}>
+          <FormControl>
+            <FormLabel>Email</FormLabel>
+            <Input value={email} isReadOnly />
+          </FormControl>
           <FormControl isInvalid={!!errors.password}>
             <FormLabel>Password</FormLabel>
             <Input
