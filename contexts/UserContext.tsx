@@ -8,7 +8,7 @@ interface UserContextType {
   isAuthenticated: boolean;
   accessToken: string | null;
   refreshToken: string | null;
-  isEmailLogin: boolean;
+  provider: string | null;
   actions: {
     setAccessToken: (token: string) => void;
     setRefreshToken: (token: string) => void;
@@ -24,13 +24,13 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [authenticated, setAuthenticated] = useState(false);
-  const [isEmailLogin, setEmailLogin] = useState(false);
+  const [provider, setProvider] = useState<string | null>(null);
 
   const signOut = () => {
     setAccessToken(null);
     setRefreshToken(null);
     setAuthenticated(false);
-    setEmailLogin(false);
+    setProvider(null);
   };
   useEffect(() => {
     window.onstorage = (e) => {
@@ -62,11 +62,11 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
       const accessTokenResult = tokenSchema.safeParse(access_token);
       const refreshTokenResult = tokenSchema.safeParse(refresh_token);
       if (accessTokenResult.success && refreshTokenResult.success) {
-        const decoded = jwt_decode<{ email_login: boolean }>(refresh_token);
+        const decoded = jwt_decode<{ provider: string }>(refresh_token);
         setRefreshToken(refresh_token);
         setAccessToken(access_token);
         setAuthenticated(true);
-        setEmailLogin(decoded.email_login)
+        setProvider(decoded.provider);
       }
     } catch {}
   }, []);
@@ -75,7 +75,7 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
     isAuthenticated: authenticated,
     accessToken: accessToken,
     refreshToken: refreshToken,
-    isEmailLogin: isEmailLogin,
+    provider: provider,
     actions: {
       setAccessToken: (token) => {
         setAccessToken(token);
@@ -86,7 +86,7 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
       signIn: (pair) => {
         setRefreshToken(pair.refresh_token.token);
         setAuthenticated(true);
-        setEmailLogin(pair.refresh_token.email_login);
+        setProvider(pair.refresh_token.provider);
       },
     },
   };
