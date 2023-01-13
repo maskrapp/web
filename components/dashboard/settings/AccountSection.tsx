@@ -10,10 +10,11 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { accountDetails } from "../../../api/user";
 import { useAxios } from "../../../hooks/useAxios";
+import { useUser } from "../../../hooks/useUser";
 
 export const AccountSection = () => {
   const axios = useAxios();
-  // const { isEmailLogin } = useUser();
+  const { provider } = useUser();
   const { data } = useQuery(["accountdetails"], () => accountDetails(axios));
   return (
     <Box w="25em">
@@ -36,6 +37,7 @@ export const AccountSection = () => {
               type="password"
               value="placeholder123"
               isReadOnly
+              disabled={provider !== "email"}
             />
             <IconButton
               aria-label="Change Password"
