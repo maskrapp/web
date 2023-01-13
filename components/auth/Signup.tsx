@@ -287,7 +287,6 @@ const VerifyCodeForm = ({ email, successFn }: VerifyCodeProps) => {
 };
 
 interface CreateAccountFormValues {
-  name: string;
   password: string;
   confirmPassword: string;
 }
@@ -309,18 +308,16 @@ const CreateAccountForm = ({ email, code }: CreateAccountFormProps) => {
   const { actions } = useUser();
   const { mutate } = useMutation(
     ({
-      name,
       email,
       password,
       code,
       captcha_token,
     }: {
-      name: string;
       email: string;
       password: string;
       code: string;
       captcha_token: string;
-    }) => createAccount(axios, { name, email, password, code, captcha_token }),
+    }) => createAccount(axios, { email, password, code, captcha_token }),
     {
       onSuccess: (data: AxiosResponse<TokenPair, any>) => {
         const tokens = data.data;
@@ -340,7 +337,6 @@ const CreateAccountForm = ({ email, code }: CreateAccountFormProps) => {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
   const onSubmit: SubmitHandler<CreateAccountFormValues> = async ({
-    name,
     password,
   }) => {
     if (!executeRecaptcha) {
@@ -348,24 +344,12 @@ const CreateAccountForm = ({ email, code }: CreateAccountFormProps) => {
       return;
     }
     const captcha_token = await executeRecaptcha("create_account");
-    mutate({ name, email, password, code, captcha_token });
+    mutate({ email, password, code, captcha_token });
   };
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
         <VStack spacing={2}>
-          <FormControl isInvalid={!!errors.name}>
-            <FormLabel>Name</FormLabel>
-            <Input
-              type="name"
-              {...register("name", {
-                maxLength: 64,
-              })}
-            />
-            <FormErrorMessage>
-              {errors.password && errors.password.message}
-            </FormErrorMessage>
-          </FormControl>
           <FormControl isInvalid={!!errors.password}>
             <FormLabel>Password</FormLabel>
             <Input

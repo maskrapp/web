@@ -22,7 +22,6 @@ export const createAccountCode = async (
 export const createAccount = (
   axios: AxiosInstance,
   values: {
-    name: string;
     email: string;
     password: string;
     code: string;
