@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosHeaders, AxiosResponse } from "axios";
 import { Token } from "../types";
 import { BACKEND_URL } from "./constants";
 
@@ -18,9 +18,10 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use((config) => {
   const access_token = localStorage.getItem("access_token");
   if (access_token) {
-    config.headers!.Authorization = `Bearer ${access_token}`;
-  } else {
-    config.headers!.Authorization = "";
+    (config.headers as AxiosHeaders).set(
+      "Authorization",
+      `Bearer ${access_token}`,
+    );
   }
   return config;
 });
@@ -43,7 +44,7 @@ axiosInstance.interceptors.response.use(
         }
         try {
           refreshPromise = refreshAccessToken(
-            localStorage.getItem("refresh_token") ?? "invalid_token"
+            localStorage.getItem("refresh_token") ?? "invalid_token",
           );
           const rs = await refreshPromise;
           const token = rs.data;
@@ -65,5 +66,5 @@ axiosInstance.interceptors.response.use(
       }
     }
     return Promise.reject(err);
-  }
+  },
 );
