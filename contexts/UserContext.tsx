@@ -26,34 +26,6 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
   const [authenticated, setAuthenticated] = useState(false);
   const [provider, setProvider] = useState<string | null>(null);
 
-  const signOut = () => {
-    setAccessToken(null);
-    setRefreshToken(null);
-    setAuthenticated(false);
-    setProvider(null);
-  };
-  useEffect(() => {
-    window.onstorage = (e) => {
-      try {
-        if (e.key === "refresh_token") {
-          if (!e.newValue) signOut();
-          const { success } = tokenSchema.safeParse(e.newValue);
-          if (success) {
-            setRefreshToken(e.newValue);
-            setAuthenticated(true);
-          } else {
-            signOut();
-          }
-        }
-      } catch {
-        signOut();
-      }
-    };
-    return () => {
-      window.onstorage = null;
-    };
-  }, []);
-
   useEffect(() => {
     const access_token = localStorage.getItem("access_token");
     const refresh_token = localStorage.getItem("refresh_token");
@@ -68,7 +40,9 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
         setAuthenticated(true);
         setProvider(decoded.provider);
       }
-    } catch {}
+    } catch (error) {
+      console.error(error);
+    }
   }, []);
 
   const value: UserContextType = {
