@@ -12,6 +12,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { AnimatePresence } from "framer-motion";
 import { fetchMasks } from "../../../api/mask";
 
 import { useAxios } from "../../../hooks/useAxios";
@@ -55,14 +56,16 @@ export const Masks = ({ openModalFn }: Props) => {
             </Tr>
           </Thead>
           <Tbody>
-            {data?.map((mask) => (
-              <MaskEntry
-                key={mask.mask}
-                email={mask.email}
-                mask={mask.mask}
-                enabled={mask.enabled}
-              />
-            ))}
+            <AnimatePresence>
+              {data?.map((mask) => (
+                <MaskEntry
+                  key={mask.mask}
+                  email={mask.email}
+                  mask={mask.mask}
+                  enabled={mask.enabled}
+                />
+              ))}
+            </AnimatePresence>
           </Tbody>
           <Tfoot />
         </Table>

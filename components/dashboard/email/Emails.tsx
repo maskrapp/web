@@ -11,6 +11,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { AnimatePresence } from "framer-motion";
 import { fetchEmails } from "../../../api/email";
 
 import { useAxios } from "../../../hooks/useAxios";
@@ -51,14 +52,16 @@ export const Emails = ({ openModalFn }: Props) => {
             </Tr>
           </Thead>
           <Tbody>
-            {query.data?.map((email) => (
-              <EmailEntry
-                key={email.email}
-                email={email.email}
-                is_primary={email.is_primary}
-                is_verified={email.is_verified}
-              />
-            ))}
+            <AnimatePresence>
+              {query.data?.map((email) => (
+                <EmailEntry
+                  key={email.email}
+                  email={email.email}
+                  is_primary={email.is_primary}
+                  is_verified={email.is_verified}
+                />
+              ))}
+            </AnimatePresence>
           </Tbody>
         </Table>
       </TableContainer>

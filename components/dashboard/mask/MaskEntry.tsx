@@ -54,7 +54,12 @@ export const MaskEntry = ({ mask, email, enabled }: MaskEntryProps) => {
           submitButtonText="Delete Mask"
         />
       )}
-      <MotionTr initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <MotionTr
+        layout
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
         <Td>{mask}</Td>
         <Td>{email}</Td>
         <Td>

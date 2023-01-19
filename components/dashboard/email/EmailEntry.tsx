@@ -82,7 +82,11 @@ export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
           submitAction={() => deleteEmailMutation.mutate(email)}
         />
       )}
-      <MotionTr initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <MotionTr
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
         <Td>{email}</Td>
         <Td>
           {is_verified
