@@ -13,8 +13,7 @@ export const SettingsCard = () => {
           <Tab>Privacy</Tab>
           <Tab>Billing</Tab>
         </TabList>
-
-        <TabPanels>
+        <TabPanels my="1">
           <TabPanel>
             <AccountSection />
           </TabPanel>
