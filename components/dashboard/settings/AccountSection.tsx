@@ -22,7 +22,7 @@ export const AccountSection = () => {
         <Box>
           <FormLabel>Email</FormLabel>
           <Flex direction="row" gap="3">
-            <Input type="email" isReadOnly value={data?.email} />
+            <Input type="email" readOnly value={data ? data.email : ""} />
             <IconButton
               aria-label="Change Email"
               icon={<EditIcon />}
@@ -36,8 +36,9 @@ export const AccountSection = () => {
             <Input
               type="password"
               value="placeholder123"
-              isReadOnly
-              disabled={provider !== "email"}
+              {...provider === "email"
+                ? { readOnly: true }
+                : { disabled: true }}
             />
             <IconButton
               aria-label="Change Password"
