@@ -3,13 +3,9 @@ import { NextPage } from "next";
 import Head from "next/head";
 import { AuthWrapper } from "../components/auth/AuthWrapper";
 import { DashboardHeader } from "../components/dashboard/DashboardHeader";
-import { CreateEmailModal } from "../components/dashboard/email/CreateEmailModal";
 import { Emails } from "../components/dashboard/email/Emails";
-import { VerifyEmailModal } from "../components/dashboard/email/VerifyEmailModal";
-import { useModal } from "../hooks/useModal";
 
 const EmailPage: NextPage = () => {
-  const { createEmailModal, verifyEmailModal } = useModal();
   return (
     <>
       <Head>
@@ -23,16 +19,6 @@ const EmailPage: NextPage = () => {
       </Head>
       <AuthWrapper>
         <DashboardHeader />
-        {createEmailModal.isOpen && (
-          <CreateEmailModal closeFn={createEmailModal.onClose} />
-        )}
-        {verifyEmailModal.isOpen && (
-          <VerifyEmailModal
-            email={verifyEmailModal.email}
-            closeFn={verifyEmailModal.onClose}
-          />
-        )}
-
         <Box
           margin="auto"
           boxSize={{
@@ -40,7 +26,7 @@ const EmailPage: NextPage = () => {
             base: "100%",
           }}
         >
-          <Emails openModalFn={createEmailModal.onOpen} />
+          <Emails />
         </Box>
       </AuthWrapper>
     </>

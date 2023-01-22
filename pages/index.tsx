@@ -3,14 +3,10 @@ import { NextPage } from "next";
 import Head from "next/head";
 import { AuthWrapper } from "../components/auth/AuthWrapper";
 import { DashboardHeader } from "../components/dashboard/DashboardHeader";
-import { CreateEmailModal } from "../components/dashboard/email/CreateEmailModal";
-import { CreateMaskModal } from "../components/dashboard/mask/CreateMaskModal";
 import { Masks } from "../components/dashboard/mask/Masks";
 import { MaskStats } from "../components/dashboard/mask/MaskStats";
-import { useModal } from "../hooks/useModal";
 
 const Index: NextPage = () => {
-  const { createMaskModal, createEmailModal } = useModal();
   return (
     <>
       <Head>
@@ -24,12 +20,6 @@ const Index: NextPage = () => {
       </Head>
       <AuthWrapper>
         <DashboardHeader />
-        {createMaskModal.isOpen && (
-          <CreateMaskModal closeFn={createMaskModal.onClose} />
-        )}
-        {createEmailModal.isOpen && (
-          <CreateEmailModal closeFn={createEmailModal.onClose} />
-        )}
 
         <Box
           margin="auto"
@@ -39,7 +29,7 @@ const Index: NextPage = () => {
           }}
         >
           <MaskStats />
-          <Masks openModalFn={createMaskModal.onOpen} />
+          <Masks />
         </Box>
       </AuthWrapper>
     </>

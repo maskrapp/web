@@ -19,23 +19,18 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { addEmail, requestNewCode } from "../../../api/email";
 
 import { useAxios } from "../../../hooks/useAxios";
-import { useModal } from "../../../hooks/useModal";
 import { APIResponse, Email } from "../../../types";
 
-interface Focusable {
-  focus: () => void;
-}
-
 interface EmailModalProps {
-  finalRef?: React.RefObject<Focusable>;
   closeFn: () => void;
+  onSuccess: (email: string) => void;
 }
 
 interface FormValues {
   email: string;
 }
 
-export const CreateEmailModal = ({ closeFn }: EmailModalProps) => {
+export const CreateEmailModal = ({ closeFn, onSuccess }: EmailModalProps) => {
   const {
     handleSubmit,
     register,
@@ -45,15 +40,13 @@ export const CreateEmailModal = ({ closeFn }: EmailModalProps) => {
   const toast = useToast();
   const axios = useAxios();
 
-  const { verifyEmailModal } = useModal();
-
   const queryClient = useQueryClient();
 
   const requestCodeMutation = useMutation(
     (email: string) => requestNewCode(axios, email),
     {
       onSuccess: (data: any) => {
-        verifyEmailModal.openWithProps(data.email);
+        onSuccess(data.email as string);
       },
     },
   );

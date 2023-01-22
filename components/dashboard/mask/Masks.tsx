@@ -10,6 +10,7 @@ import {
   Th,
   Thead,
   Tr,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence } from "framer-motion";
@@ -18,58 +19,61 @@ import { fetchMasks } from "../../../api/mask";
 import { useAxios } from "../../../hooks/useAxios";
 import { Mask } from "../../../types";
 import { Card } from "../../shared/Card";
+import { CreateMaskModal } from "./CreateMaskModal";
 import { MaskEntry } from "./MaskEntry";
 
-interface Props {
-  openModalFn: () => void;
-}
-
-export const Masks = ({ openModalFn }: Props) => {
+export const Masks = () => {
   const axios = useAxios();
 
   const { data, isLoading } = useQuery<Mask[], Error>(
     ["masks"],
     () => fetchMasks(axios),
     {
-      refetchOnMount: true,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
     },
   );
 
+  const { onOpen, onClose, isOpen } = useDisclosure();
+
   return (
-    <Card>
-      <Flex direction="row" mx="6" justifyContent="space-between">
-        <Flex gap="2.5">
-          <Text>Masks</Text>
-          <Spinner hidden={!isLoading} />
+    <>
+      {isOpen && <CreateMaskModal closeFn={onClose} />}
+      <Card>
+        <Flex direction="row" mx="6" justifyContent="space-between">
+          <Flex gap="2.5">
+            <Text>Masks</Text>
+            <Spinner hidden={!isLoading} />
+          </Flex>
+          <Button variant={"outline"} onClick={onOpen}>
+            Create Mask
+          </Button>
         </Flex>
-        <Button variant={"outline"} onClick={openModalFn}>
-          Create Mask
-        </Button>
-      </Flex>
-      <TableContainer overflow="auto">
-        <Table variant="unstyled">
-          <Thead>
-            <Tr>
-              <Th>Mask</Th>
-              <Th>Email</Th>
-              <Th>Enabled</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            <AnimatePresence>
-              {data?.map((mask) => (
-                <MaskEntry
-                  key={mask.mask}
-                  email={mask.email}
-                  mask={mask.mask}
-                  enabled={mask.enabled}
-                />
-              ))}
-            </AnimatePresence>
-          </Tbody>
-          <Tfoot />
-        </Table>
-      </TableContainer>
-    </Card>
+        <TableContainer overflow="auto">
+          <Table variant="unstyled">
+            <Thead>
+              <Tr>
+                <Th>Mask</Th>
+                <Th>Email</Th>
+                <Th>Enabled</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              <AnimatePresence>
+                {data?.map((mask) => (
+                  <MaskEntry
+                    key={mask.mask}
+                    email={mask.email}
+                    mask={mask.mask}
+                    enabled={mask.enabled}
+                  />
+                ))}
+              </AnimatePresence>
+            </Tbody>
+            <Tfoot />
+          </Table>
+        </TableContainer>
+      </Card>
+    </>
   );
 };

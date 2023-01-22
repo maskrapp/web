@@ -15,7 +15,6 @@ import { motion } from "framer-motion";
 import { deleteEmail, requestNewCode } from "../../../api/email";
 
 import { useAxios } from "../../../hooks/useAxios";
-import { useModal } from "../../../hooks/useModal";
 import { APIResponse, Email } from "../../../types";
 import { ConfirmationModal } from "../ConfirmationModal";
 
@@ -25,9 +24,12 @@ interface Props {
   email: string;
   is_verified: boolean;
   is_primary: boolean;
+  openVerificationModal: (email: string) => void;
 }
 
-export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
+export const EmailEntry = (
+  { email, is_verified, is_primary, openVerificationModal }: Props,
+) => {
   const toast = useToast();
   const queryClient = useQueryClient();
   const axios = useAxios();
@@ -53,13 +55,12 @@ export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
     },
   );
 
-  const confirmationModalDisclosure = useDisclosure();
-  const modal = useModal();
+  const { onOpen, onClose, isOpen } = useDisclosure();
 
   const { mutate, isLoading } = useMutation(
     () => requestNewCode(axios, email),
     {
-      onSuccess: () => modal.verifyEmailModal.openWithProps(email),
+      onSuccess: () => openVerificationModal(email),
       onError: (data: AxiosError<APIResponse, any>) => {
         toast({
           title: "Error",
@@ -74,10 +75,10 @@ export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
 
   return (
     <>
-      {confirmationModalDisclosure.isOpen && (
+      {isOpen && (
         <ConfirmationModal
-          text="This action cannot be reversed, are you sure you want to delete this email?"
-          onClose={confirmationModalDisclosure.onClose}
+          text="This action cannot be reversed, are you sure you want to delete this email"
+          onClose={onClose}
           submitButtonText="Delete Email"
           submitAction={() => deleteEmailMutation.mutate(email)}
         />
@@ -117,7 +118,6 @@ export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
                     colorScheme="red"
                     aria-label="Delete Email"
                     icon={<DeleteIcon />}
-                    onClick={confirmationModalDisclosure.onOpen}
                   />
                 </Tooltip>
               )
@@ -126,7 +126,7 @@ export const EmailEntry = ({ email, is_verified, is_primary }: Props) => {
                   colorScheme="red"
                   aria-label="Delete Email"
                   icon={<DeleteIcon />}
-                  onClick={confirmationModalDisclosure.onOpen}
+                  onClick={onOpen}
                 />
               )}
           </HStack>

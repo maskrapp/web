@@ -1,3 +1,4 @@
+import { CheckIcon } from "@chakra-ui/icons";
 import {
   Alert,
   AlertDescription,
@@ -16,7 +17,7 @@ import {
   PinInputField,
   useToast,
 } from "@chakra-ui/react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, AxiosInstance } from "axios";
 import { useRef, useState } from "react";
 import { useAxios } from "../../../hooks/useAxios";
@@ -47,17 +48,20 @@ export const VerifyEmailModal = ({ closeFn, email }: Props) => {
   const toast = useToast();
   const firstInputRef = useRef<HTMLInputElement>(null);
 
-  const { mutate, isLoading } = useMutation(() => requestNewCode(axios, email), {
-    onError: (data: AxiosError<APIResponse, any>) => {
-      toast({
-        title: "Error",
-        description: data.response?.data?.message,
-        status: "error",
-        position: "bottom",
-        isClosable: true,
-      });
+  const { mutate, isLoading } = useMutation(
+    () => requestNewCode(axios, email),
+    {
+      onError: (data: AxiosError<APIResponse, any>) => {
+        toast({
+          title: "Error",
+          description: data.response?.data?.message,
+          status: "error",
+          position: "bottom",
+          isClosable: true,
+        });
+      },
     },
-  });
+  );
 
   const queryClient = useQueryClient();
   const verifyCodeMutation = useMutation(
