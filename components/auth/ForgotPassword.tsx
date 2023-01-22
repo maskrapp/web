@@ -20,7 +20,6 @@ export const ForgotPasswordForm = ({ goBackfn }: Props) => {
       minH={"100vh"}
       align={"center"}
       justify={"center"}
-      bg={useColorModeValue("gray.50", "gray.800")}
     >
       <Stack
         spacing={4}
