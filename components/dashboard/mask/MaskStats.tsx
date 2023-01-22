@@ -20,7 +20,7 @@ export const MaskStats = () => {
     () => fetchMasks(axios),
   );
 
-  const maskCount = !data ? 0 : data.length;
+  const maskCount = !!data ? data.length : 0;
 
   const [messagesForwarded, messagesReceived] = useMemo(() => {
     let forwarded = 0;
