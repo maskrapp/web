@@ -26,7 +26,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useUser } from "../../hooks/useUser";
 import { APIResponse, TokenPair } from "../../types";
 import { BACKEND_URL } from "../../utils/constants";
-import { pairSchema } from "../../utils/zod";
 const makeLoginRequest = (
   email: string,
   password: string,
@@ -58,13 +57,10 @@ export const Signin = () => {
       makeLoginRequest(email, password, captcha_token),
     {
       onSuccess: (data: AxiosResponse<TokenPair, any>) => {
-        const { success } = pairSchema.safeParse(data.data);
-        if (success) {
-          localStorage.setItem("access_token", data.data.access_token.token);
-          localStorage.setItem("refresh_token", data.data.refresh_token.token);
-          actions.signIn(data.data);
-          router.push("/");
-        }
+        localStorage.setItem("access_token", data.data.access_token.token);
+        localStorage.setItem("refresh_token", data.data.refresh_token.token);
+        actions.signIn(data.data);
+        router.push("/");
       },
       onError: (data: AxiosError) => {
         const response = data.response?.data as APIResponse;
