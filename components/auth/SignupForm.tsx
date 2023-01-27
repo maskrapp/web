@@ -7,18 +7,14 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
   HStack,
   Input,
-  Link as ChakraLink,
   ListItem,
-  Stack,
   Text,
   UnorderedList,
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import Link from "next/link";
 
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError, AxiosResponse } from "axios";
@@ -34,9 +30,10 @@ import {
   createAccountCode,
   resendCode,
   verifyAccountCode,
-} from "../../api/user";
+} from "../../api/auth";
+import { AuthCard } from "../shared/AuthCard";
 
-export const SignUp = () => {
+export const SignUpForm = () => {
   const [step, setStep] = useState(0);
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
@@ -68,26 +65,9 @@ export const SignUp = () => {
   };
 
   return (
-    <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
-      <Stack align={"center"}>
-        <Heading fontSize={"4xl"}>Create an account</Heading>
-        <Text fontSize={"lg"} color={"gray.600"}>
-          Already have an account?{" "}
-          <Link href="/signin">
-            <ChakraLink color={"blue.400"}>Sign in here</ChakraLink>
-          </Link>
-        </Text>
-      </Stack>
-      <Box
-        rounded={"lg"}
-        bg="blackAlpha.300"
-        w={{ base: "100%", sm: "100%", md: "26em" }}
-        boxShadow={"lg"}
-        p={8}
-      >
-        {getStepComponent()}
-      </Box>
-    </Stack>
+    <AuthCard>
+      {getStepComponent()}
+    </AuthCard>
   );
 };
 
@@ -152,7 +132,6 @@ const EmailForm = ({ successFn }: EmailFormProps) => {
             <Button
               type="submit"
               loadingText="Submitting"
-              size="lg"
               w="100%"
               bg={"blue.400"}
               color={"white"}
