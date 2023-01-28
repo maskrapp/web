@@ -59,3 +59,32 @@ export const signInWithEmail = (
 ) => {
   return axios.post(`${BACKEND_URL}/auth/email-login`, values);
 };
+
+export const createPasswordCode = async (
+  axios: AxiosInstance,
+  values: { email: string; captcha_token: string },
+) => {
+  const response = await axios.post(
+    `${BACKEND_URL}/auth/create-password-code`,
+    values,
+  );
+  return { ...response, email: values.email };
+};
+
+export const verifyPasswordCode = async (
+  axios: AxiosInstance,
+  values: { email: string; code: string; captcha_token: string },
+) => {
+  const response = await axios.post(
+    `${BACKEND_URL}/auth/verify-password-code`,
+    values,
+  );
+  return { ...response, code: values.code };
+};
+
+export const changePassword = async (
+  axios: AxiosInstance,
+  values: { password: string; token: string; captcha_token: string },
+) => {
+  return axios.post(`${BACKEND_URL}/auth/change-password`, values);
+};
