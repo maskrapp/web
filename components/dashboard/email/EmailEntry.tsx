@@ -108,13 +108,12 @@ export const EmailEntry = (
             {is_primary
               ? (
                 <Tooltip
-                  bg="red.200"
                   placement="bottom-start"
                   label="You cannot delete your primary email"
                   aria-label="You cannot delete your primary email"
                 >
                   <IconButton
-                    disabled
+                    isDisabled={true}
                     colorScheme="red"
                     aria-label="Delete Email"
                     icon={<DeleteIcon />}
