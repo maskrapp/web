@@ -1,11 +1,11 @@
 import { Box, ChakraProps } from "@chakra-ui/react";
-import { PropsWithChildren } from "react";
+import { ReactNode } from "react";
 
-interface Props {
-  props?: ChakraProps;
-}
+type Props = ChakraProps & {
+  children: ReactNode;
+};
 
-export const Card = ({ children, props }: PropsWithChildren<Props>) => {
+export const Card = ({ children, ...rest }: Props) => {
   return (
     <Box
       margin={"auto"}
@@ -18,7 +18,7 @@ export const Card = ({ children, props }: PropsWithChildren<Props>) => {
       overflowY="hidden"
       border={"1px solid"}
       borderColor="gray.500"
-      {...props}
+      {...rest}
     >
       {children}
     </Box>
