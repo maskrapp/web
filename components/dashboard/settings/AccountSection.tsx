@@ -1,10 +1,14 @@
 import { EditIcon } from "@chakra-ui/icons";
 import {
   Box,
-  Flex,
   FormLabel,
+  Icon,
   IconButton,
+  IconButtonProps,
   Input,
+  InputGroup,
+  InputProps,
+  InputRightElement,
   Stack,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
@@ -21,33 +25,51 @@ export const AccountSection = () => {
       <Stack>
         <Box>
           <FormLabel>Email</FormLabel>
-          <Flex direction="row" gap="3">
-            <Input type="email" readOnly value={data ? data.email : ""} />
-            <IconButton
-              aria-label="Change Email"
-              icon={<EditIcon />}
-              disabled
-            />
-          </Flex>
+          <InputWithEditIcon
+            type="email"
+            value={data?.email}
+            iconButtonProps={{
+              "aria-label": "Change email",
+              isDisabled: provider !== "email",
+            }}
+          />
         </Box>
         <Box>
           <FormLabel>Password</FormLabel>
-          <Flex direction="row" gap="3">
-            <Input
-              type="password"
-              value="placeholder123"
-              {...provider === "email"
-                ? { readOnly: true }
-                : { disabled: true }}
-            />
-            <IconButton
-              aria-label="Change Password"
-              icon={<EditIcon />}
-              disabled
-            />
-          </Flex>
+          <InputWithEditIcon
+            type="password"
+            value="placeholder123"
+            isReadOnly
+            iconButtonProps={{
+              "aria-label": "Change password",
+              isDisabled: provider !== "email",
+            }}
+          />
         </Box>
       </Stack>
     </Box>
+  );
+};
+
+type InputIconProps = InputProps & {
+  iconButtonProps?: IconButtonProps;
+};
+
+const InputWithEditIcon = (
+  { iconButtonProps, ...rest }: InputIconProps,
+) => {
+  return (
+    <InputGroup size="lg">
+      <Input readOnly {...rest} />
+      <InputRightElement>
+        <IconButton
+          variant="ghost"
+          icon={<Icon as={EditIcon} />}
+          size="md"
+          aria-label=""
+          {...iconButtonProps}
+        />
+      </InputRightElement>
+    </InputGroup>
   );
 };
