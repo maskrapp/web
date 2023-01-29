@@ -50,7 +50,7 @@ export const Emails = () => {
         />
       )}
       {isOpen2 && <VerifyEmailModal closeFn={onClose2} email={email} />}
-      <Card>
+      <Card pb="8">
         <Flex direction="row" justifyContent="space-between" mx="6">
           <Flex gap="2.5">
             <Text>Connected Emails</Text>

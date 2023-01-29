@@ -39,7 +39,7 @@ export const Masks = () => {
   return (
     <>
       {isOpen && <CreateMaskModal closeFn={onClose} />}
-      <Card>
+      <Card pb="8">
         <Flex direction="row" mx="6" justifyContent="space-between">
           <Flex gap="2.5">
             <Text>Masks</Text>
