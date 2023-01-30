@@ -1,10 +1,9 @@
 import { ChevronDownIcon, SettingsIcon } from "@chakra-ui/icons";
 import {
+  Badge,
   Button,
   Flex,
   HStack,
-  Icon,
-  IconProps,
   Link as ChakraLink,
   Menu,
   MenuButton,
@@ -16,24 +15,12 @@ import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { useAxios } from "../../hooks/useAxios";
 
-export const Logo = (props?: IconProps) => {
-  // THIS IS A PLACEHOLDER; replace this later
+export const Logo = () => {
   return (
-    <Icon
-      id="logo-72"
-      width="52"
-      height="44"
-      viewBox="0 0 53 44"
-      fill="#FFFFFF"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
-      <path
-        d="M23.2997 0L52.0461 28.6301V44H38.6311V34.1553L17.7522 13.3607L13.415 13.3607L13.415 44H0L0 0L23.2997 0ZM38.6311 15.2694V0L52.0461 0V15.2694L38.6311 15.2694Z"
-        className="ccustom"
-        fill="#212326"
-      ></path>
-    </Icon>
+    <HStack>
+      <Text fontSize={"md"} fontWeight="700">Maskr</Text>
+      <Badge colorScheme="blue">Alpha</Badge>
+    </HStack>
   );
 };
 
@@ -64,7 +51,7 @@ export const DashboardHeader = () => {
             base: "16",
           }}
         >
-          <Logo boxSize={"30px"} color="red" />
+          <Logo />
           <HStack
             spacing={{
               base: 2,
