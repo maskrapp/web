@@ -37,8 +37,8 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
         const decoded = jwt_decode<{ provider: string }>(refresh_token);
         setRefreshToken(refresh_token);
         setAccessToken(access_token);
-        setAuthenticated(true);
         setProvider(decoded.provider);
+        setAuthenticated(true);
       }
     } catch (error) {
       console.error(error);
@@ -59,6 +59,7 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
       },
       signIn: (pair) => {
         setRefreshToken(pair.refresh_token.token);
+        setAccessToken(pair.access_token.token);
         setAuthenticated(true);
         setProvider(pair.refresh_token.provider);
       },
