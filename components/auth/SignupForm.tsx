@@ -192,7 +192,7 @@ const VerifyCodeForm = ({ email, successFn }: VerifyCodeProps) => {
       onSuccess: () => {
         toast({
           title: "Success",
-          description: "Check your mailbox for the new code",
+          description: "Check your mailbox for a new code",
           status: "success",
           position: "top",
         });
