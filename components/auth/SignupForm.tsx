@@ -24,7 +24,6 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useUser } from "../../hooks/useUser";
 import { APIResponse, TokenPair } from "../../types";
-import { pairSchema } from "../../utils/zod";
 import {
   createAccount,
   createAccountCode,
@@ -300,13 +299,10 @@ const CreateAccountForm = ({ email, code }: CreateAccountFormProps) => {
     {
       onSuccess: (data: AxiosResponse<TokenPair, any>) => {
         const tokens = data.data;
-        const { success } = pairSchema.safeParse(tokens);
-        if (success) {
-          localStorage.setItem("access_token", tokens.access_token.token);
-          localStorage.setItem("refresh_token", tokens.refresh_token.token);
-          actions.signIn(data.data);
-          router.push("/");
-        }
+        localStorage.setItem("access_token", tokens.access_token.token);
+        localStorage.setItem("refresh_token", tokens.refresh_token.token);
+        actions.signIn(data.data);
+        router.push("/");
       },
       onError: (data) => {
         console.log("ERROR", data);
