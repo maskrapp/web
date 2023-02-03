@@ -30,6 +30,7 @@ import {
   verifyPasswordCode,
 } from "../../api/auth";
 import { APIResponse } from "../../types";
+import { PASSWORD_REGEXP } from "../../utils/constants";
 import { AuthCard } from "../shared/AuthCard";
 
 export const ForgotPasswordForm = () => {
@@ -372,8 +373,7 @@ export const StepThree = ({ token }: { token: string }) => {
                 required: true,
                 disabled: isSuccess,
                 pattern: {
-                  value:
-                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/i,
+                  value: PASSWORD_REGEXP,
                   message:
                     "Password should contain at least one uppercase character, a numeric character, a special character and must be between 8 and 32 characters",
                 },

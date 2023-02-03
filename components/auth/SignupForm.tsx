@@ -31,6 +31,7 @@ import {
   verifyAccountCode,
 } from "../../api/auth";
 import { AuthCard } from "../shared/AuthCard";
+import { PASSWORD_REGEXP } from "../../utils/constants";
 
 export const SignUpForm = () => {
   const [step, setStep] = useState(0);
@@ -335,8 +336,7 @@ const CreateAccountForm = ({ email, code }: CreateAccountFormProps) => {
               type="password"
               {...register("password", {
                 pattern: {
-                  value:
-                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/i,
+                  value: PASSWORD_REGEXP,
                   message:
                     "Password should contain at least one uppercase character, a numeric character, a special character and must be between 8 and 32 characters",
                 },
