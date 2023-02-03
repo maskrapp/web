@@ -10,8 +10,8 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
-import { SignUpForm } from "../components/auth/SignupForm";
-import { useUser } from "../hooks/useUser";
+import { SignUpForm } from "@/components/auth/SignupForm";
+import { useUser } from "@/hooks/useUser";
 
 const captchaKey = process.env.NEXT_PUBLIC_CAPTCHA_KEY ?? "";
 

@@ -1,3 +1,4 @@
+import { addEmail, requestNewCode } from "@/api/email";
 import {
   Button,
   FormControl,
@@ -16,10 +17,9 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { addEmail, requestNewCode } from "../../../api/email";
 
-import { useAxios } from "../../../hooks/useAxios";
-import { APIResponse, Email } from "../../../types";
+import { useAxios } from "@/hooks/useAxios";
+import { APIResponse, Email } from "@/types";
 
 interface EmailModalProps {
   closeFn: () => void;
@@ -48,7 +48,7 @@ export const CreateEmailModal = ({ closeFn, onSuccess }: EmailModalProps) => {
       onSuccess: (data: any) => {
         onSuccess(data.email as string);
       },
-    },
+    }
   );
 
   const { mutate, isLoading } = useMutation(
@@ -61,7 +61,7 @@ export const CreateEmailModal = ({ closeFn, onSuccess }: EmailModalProps) => {
           [
             { email: data.email, is_primary: false, is_verified: false },
             ...emails,
-          ],
+          ]
         );
         requestCodeMutation.mutate(data.email);
       },
@@ -74,7 +74,7 @@ export const CreateEmailModal = ({ closeFn, onSuccess }: EmailModalProps) => {
           isClosable: true,
         });
       },
-    },
+    }
   );
 
   const onSubmit: SubmitHandler<FormValues> = async (values) => {

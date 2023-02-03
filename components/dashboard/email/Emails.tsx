@@ -14,14 +14,14 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { fetchEmails } from "../../../api/email";
+import { fetchEmails } from "@/api/email";
 
-import { useAxios } from "../../../hooks/useAxios";
-import { Email } from "../../../types";
-import { Card } from "../../shared/Card";
-import { CreateEmailModal } from "./CreateEmailModal";
-import { EmailEntry } from "./EmailEntry";
-import { VerifyEmailModal } from "./VerifyEmailModal";
+import { useAxios } from "@/hooks/useAxios";
+import { Email } from "@/types";
+import { Card } from "@/components/shared/Card";
+import { CreateEmailModal } from "@/components/dashboard/email/CreateEmailModal";
+import { EmailEntry } from "@/components/dashboard/email/EmailEntry";
+import { VerifyEmailModal } from "@/components/dashboard/email/VerifyEmailModal";
 
 export const Emails = () => {
   const axios = useAxios();

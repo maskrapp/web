@@ -22,16 +22,16 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useUser } from "../../hooks/useUser";
-import { APIResponse, TokenPair } from "../../types";
+import { useUser } from "@/hooks/useUser";
+import { APIResponse, TokenPair } from "@/types";
 import {
   createAccount,
   createAccountCode,
   resendCode,
   verifyAccountCode,
 } from "../../api/auth";
-import { AuthCard } from "../shared/AuthCard";
-import { PASSWORD_REGEXP } from "../../utils/constants";
+import { AuthCard } from "@/components/shared/AuthCard";
+import { PASSWORD_REGEXP } from "@/utils/constants";
 
 export const SignUpForm = () => {
   const [step, setStep] = useState(0);

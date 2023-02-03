@@ -1,7 +1,6 @@
 import {
   Button,
   FormControl,
-  FormHelperText,
   FormLabel,
   Input,
   InputGroup,
@@ -22,10 +21,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { fetchEmails } from "../../../api/email";
-import { addMask, fetchDomains } from "../../../api/mask";
-import { useAxios } from "../../../hooks/useAxios";
-import { APIResponse } from "../../../types";
+import { fetchEmails } from "@/api/email";
+import { addMask, fetchDomains } from "@/api/mask";
+import { useAxios } from "@/hooks/useAxios";
+import { APIResponse } from "@/types";
 
 interface Props {
   closeFn: () => void;
@@ -55,6 +54,7 @@ export const CreateMaskModal = ({ closeFn }: Props) => {
   const emailQuery = useQuery(["emails"], () => fetchEmails(axios));
   const domainsQuery = useQuery(["domains"], () => fetchDomains(axios), {
     onSuccess: (data) => {
+      if (!data.length) return;
       setDomain(data[0].domain);
     },
   });

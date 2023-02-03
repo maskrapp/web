@@ -28,10 +28,10 @@ import {
   changePassword,
   createPasswordCode,
   verifyPasswordCode,
-} from "../../api/auth";
-import { APIResponse } from "../../types";
-import { PASSWORD_REGEXP } from "../../utils/constants";
-import { AuthCard } from "../shared/AuthCard";
+} from "@/api/auth";
+import { APIResponse } from "@/types";
+import { PASSWORD_REGEXP } from "@/utils/constants";
+import { AuthCard } from "@/components/shared/AuthCard";
 
 export const ForgotPasswordForm = () => {
   const [step, setStep] = useState(0);

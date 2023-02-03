@@ -12,9 +12,9 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { accountDetails } from "../../../api/user";
-import { useAxios } from "../../../hooks/useAxios";
-import { useUser } from "../../../hooks/useUser";
+import { accountDetails } from "@/api/user";
+import { useAxios } from "@/hooks/useAxios";
+import { useUser } from "@/hooks/useUser";
 
 export const AccountSection = () => {
   const axios = useAxios();

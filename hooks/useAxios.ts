@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosHeaders, AxiosResponse } from "axios";
-import { Token } from "../types";
-import { BACKEND_URL } from "../utils/constants";
+import { Token } from "@/types";
+import { BACKEND_URL } from "@/utils/constants";
 
 const refreshAccessToken = async (refreshToken: string) => {
   return axios.post(`${BACKEND_URL}/api/auth/refresh/`, {

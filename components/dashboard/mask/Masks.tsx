@@ -14,13 +14,13 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence } from "framer-motion";
-import { fetchMasks } from "../../../api/mask";
+import { fetchMasks } from "@/api/mask";
 
-import { useAxios } from "../../../hooks/useAxios";
-import { Mask } from "../../../types";
-import { Card } from "../../shared/Card";
-import { CreateMaskModal } from "./CreateMaskModal";
-import { MaskEntry } from "./MaskEntry";
+import { useAxios } from "@/hooks/useAxios";
+import { Mask } from "@/types";
+import { Card } from "@/components/shared/Card";
+import { CreateMaskModal } from "@/components/dashboard/mask/CreateMaskModal";
+import { MaskEntry } from "@/components/dashboard/mask/MaskEntry";
 
 export const Masks = () => {
   const axios = useAxios();

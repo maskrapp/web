@@ -1,7 +1,7 @@
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 
 import { TokenPair } from "../types";
-import { tokenSchema } from "../utils/zod";
+import { tokenSchema } from "@/utils/zod";
 import jwt_decode from "jwt-decode";
 
 interface UserContextType {

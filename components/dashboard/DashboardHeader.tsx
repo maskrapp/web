@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
-import { useAxios } from "../../hooks/useAxios";
+import { useAxios } from "@/hooks/useAxios";
 
 export const Logo = () => {
   return (

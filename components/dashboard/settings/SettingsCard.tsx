@@ -1,8 +1,8 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
-import { Card } from "../../shared/Card";
-import { AccountSection } from "./AccountSection";
-import { BillingSection } from "./BillingSection";
-import { PrivacySection } from "./PrivacySection";
+import { Card } from "@/components/shared/Card";
+import { AccountSection } from "@/components/dashboard/settings/AccountSection";
+import { BillingSection } from "@/components/dashboard/settings/BillingSection";
+import { PrivacySection } from "@/components/dashboard/settings/PrivacySection";
 
 export const SettingsCard = () => {
   return (

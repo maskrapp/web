@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { PropsWithChildren, useEffect, useState } from "react";
-import { useUser } from "../../hooks/useUser";
+import { useUser } from "@/hooks/useUser";
 
 export const AuthWrapper = ({ children }: PropsWithChildren) => {
   const [mounted, setMounted] = useState(false);

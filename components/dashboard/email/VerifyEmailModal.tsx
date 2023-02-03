@@ -1,4 +1,3 @@
-import { CheckIcon } from "@chakra-ui/icons";
 import {
   Alert,
   AlertDescription,
@@ -20,10 +19,10 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, AxiosInstance } from "axios";
 import { useRef, useState } from "react";
-import { useAxios } from "../../../hooks/useAxios";
-import { APIResponse, Email } from "../../../types";
-import { BACKEND_URL } from "../../../utils/constants";
-import { verificationCodeSchema } from "../../../utils/zod";
+import { useAxios } from "@/hooks/useAxios";
+import { APIResponse, Email } from "@/types";
+import { BACKEND_URL } from "@/utils/constants";
+import { verificationCodeSchema } from "@/utils/zod";
 
 const requestNewCode = (axios: AxiosInstance, email: string) => {
   return axios.post(`${BACKEND_URL}/api/user/request-code`, {

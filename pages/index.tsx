@@ -1,10 +1,10 @@
 import { Box } from "@chakra-ui/react";
 import { NextPage } from "next";
 import Head from "next/head";
-import { AuthWrapper } from "../components/auth/AuthWrapper";
+import { AuthWrapper } from "@/components/auth/AuthWrapper";
 import { DashboardHeader } from "../components/dashboard/DashboardHeader";
-import { Masks } from "../components/dashboard/mask/Masks";
-import { MaskStats } from "../components/dashboard/mask/MaskStats";
+import { Masks } from "@/components/dashboard/mask/Masks";
+import { MaskStats } from "@/components/dashboard/mask/MaskStats";
 
 const Index: NextPage = () => {
   return (

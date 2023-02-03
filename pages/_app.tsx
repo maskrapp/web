@@ -1,7 +1,7 @@
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { AppProps } from "next/app";
-import { UserContextProvider } from "../contexts/UserContext";
+import { UserContextProvider } from "@/contexts/UserContext";
 function App({ Component, pageProps }: AppProps) {
   const config = {
     initialColorMode: "dark",

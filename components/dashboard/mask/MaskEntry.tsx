@@ -12,11 +12,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { deleteMask, setMaskStatus } from "../../../api/mask";
+import { deleteMask, setMaskStatus } from "@/api/mask";
 
-import { useAxios } from "../../../hooks/useAxios";
-import { APIResponse, Mask } from "../../../types";
-import { ConfirmationModal } from "../ConfirmationModal";
+import { useAxios } from "@/hooks/useAxios";
+import { APIResponse, Mask } from "@/types";
+import { ConfirmationModal } from "@/components/dashboard/ConfirmationModal";
 
 interface MaskEntryProps {
   mask: string;

@@ -1,9 +1,9 @@
 import { Box } from "@chakra-ui/react";
 import { NextPage } from "next";
 import Head from "next/head";
-import { AuthWrapper } from "../components/auth/AuthWrapper";
-import { DashboardHeader } from "../components/dashboard/DashboardHeader";
-import { Emails } from "../components/dashboard/email/Emails";
+import { AuthWrapper } from "@/components/auth/AuthWrapper";
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { Emails } from "@/components/dashboard/email/Emails";
 
 const EmailPage: NextPage = () => {
   return (

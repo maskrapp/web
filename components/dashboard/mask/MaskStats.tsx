@@ -9,9 +9,9 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { ReactNode, useMemo } from "react";
-import { fetchMasks } from "../../../api/mask";
-import { useAxios } from "../../../hooks/useAxios";
-import { Mask } from "../../../types";
+import { fetchMasks } from "@/api/mask";
+import { useAxios } from "@/hooks/useAxios";
+import { Mask } from "@/types";
 
 export const MaskStats = () => {
   const axios = useAxios();

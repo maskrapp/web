@@ -1,3 +1,7 @@
+import { deleteEmail, requestNewCode } from "@/api/email";
+import { ConfirmationModal } from "@/components/dashboard/ConfirmationModal";
+import { useAxios } from "@/hooks/useAxios";
+import { APIResponse, Email } from "@/types";
 import { CheckIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
   HStack,
@@ -12,11 +16,6 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { motion } from "framer-motion";
-import { deleteEmail, requestNewCode } from "../../../api/email";
-
-import { useAxios } from "../../../hooks/useAxios";
-import { APIResponse, Email } from "../../../types";
-import { ConfirmationModal } from "../ConfirmationModal";
 
 const MotionTr = motion(Tr);
 
@@ -27,9 +26,12 @@ interface Props {
   openVerificationModal: (email: string) => void;
 }
 
-export const EmailEntry = (
-  { email, is_verified, is_primary, openVerificationModal }: Props,
-) => {
+export const EmailEntry = ({
+  email,
+  is_verified,
+  is_primary,
+  openVerificationModal,
+}: Props) => {
   const toast = useToast();
   const queryClient = useQueryClient();
   const axios = useAxios();
@@ -40,7 +42,7 @@ export const EmailEntry = (
         const data: Email[] = queryClient.getQueryData(["emails"]) ?? [];
         queryClient.setQueryData(
           ["emails"],
-          data.filter((value) => value.email !== email),
+          data.filter((value) => value.email !== email)
         );
       },
       onError: (data: AxiosError<APIResponse>) => {
@@ -52,7 +54,7 @@ export const EmailEntry = (
           isClosable: true,
         });
       },
-    },
+    }
   );
 
   const { onOpen, onClose, isOpen } = useDisclosure();
@@ -70,7 +72,7 @@ export const EmailEntry = (
           isClosable: true,
         });
       },
-    },
+    }
   );
 
   return (
@@ -90,9 +92,11 @@ export const EmailEntry = (
       >
         <Td>{email}</Td>
         <Td>
-          {is_verified
-            ? <Text color="green.300">Verified</Text>
-            : <Text color="red.300">Unverified</Text>}
+          {is_verified ? (
+            <Text color="green.300">Verified</Text>
+          ) : (
+            <Text color="red.300">Unverified</Text>
+          )}
         </Td>
         <Td>
           <HStack>
@@ -105,29 +109,27 @@ export const EmailEntry = (
                 onClick={() => mutate()}
               />
             )}
-            {is_primary
-              ? (
-                <Tooltip
-                  placement="bottom-start"
-                  label="You cannot delete your primary email"
-                  aria-label="You cannot delete your primary email"
-                >
-                  <IconButton
-                    isDisabled={true}
-                    colorScheme="red"
-                    aria-label="Delete Email"
-                    icon={<DeleteIcon />}
-                  />
-                </Tooltip>
-              )
-              : (
+            {is_primary ? (
+              <Tooltip
+                placement="bottom-start"
+                label="You cannot delete your primary email"
+                aria-label="You cannot delete your primary email"
+              >
                 <IconButton
+                  isDisabled={true}
                   colorScheme="red"
                   aria-label="Delete Email"
                   icon={<DeleteIcon />}
-                  onClick={onOpen}
                 />
-              )}
+              </Tooltip>
+            ) : (
+              <IconButton
+                colorScheme="red"
+                aria-label="Delete Email"
+                icon={<DeleteIcon />}
+                onClick={onOpen}
+              />
+            )}
           </HStack>
         </Td>
       </MotionTr>

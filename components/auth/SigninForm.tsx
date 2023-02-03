@@ -10,17 +10,17 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { GoogleSignin } from "./buttons/GoogleSignin";
 
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useRouter } from "next/router";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useUser } from "../../hooks/useUser";
-import { APIResponse, TokenPair } from "../../types";
-import { AuthCard } from "../shared/AuthCard";
-import { signInWithEmail } from "../../api/auth";
+import { useUser } from "@/hooks/useUser";
+import { APIResponse, TokenPair } from "@/types";
+import { AuthCard } from "@/components/shared/AuthCard";
+import { signInWithEmail } from "@/api/auth";
+import { GoogleSignin } from "@/components/auth/buttons/GoogleSignin";
 
 interface SignInArguments {
   email: string;
