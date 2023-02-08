@@ -19,7 +19,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useUser } from "@/hooks/useUser";
 import { APIResponse, TokenPair } from "@/types";
 import { AuthCard } from "@/components/shared/AuthCard";
-import { signInWithEmail } from "@/api/auth";
+import { emailSignin } from "@/api/auth";
 import { GoogleSignin } from "@/components/auth/buttons/GoogleSignin";
 
 interface SignInArguments {
@@ -38,7 +38,7 @@ export const SigninForm = () => {
       password,
       captcha_token,
     }: SignInArguments & { captcha_token: string }) =>
-      signInWithEmail(axios, { email, password, captcha_token }),
+      emailSignin(axios, { email, password, captcha_token }),
     {
       onSuccess: (data: AxiosResponse<TokenPair, any>) => {
         localStorage.setItem("access_token", data.data.access_token.token);

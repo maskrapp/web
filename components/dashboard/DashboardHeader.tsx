@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
-import { useAxios } from "@/hooks/useAxios";
+import { revokeRefreshToken } from "@/api/token";
 
 export const Logo = () => {
   return (
@@ -25,12 +25,9 @@ export const Logo = () => {
 };
 
 export const DashboardHeader = () => {
-  const axios = useAxios();
-  const { mutateAsync } = useMutation(async () => {
-    return axios.post("/api/auth/revoke-token", {
-      refresh_token: localStorage.getItem("refresh_token"),
-    });
-  });
+  const { mutateAsync } = useMutation(async () =>
+    revokeRefreshToken(localStorage.getItem("refresh_token") ?? "")
+  );
   return (
     <Flex
       justify="center"

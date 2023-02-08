@@ -26,10 +26,10 @@ import { useUser } from "@/hooks/useUser";
 import { APIResponse, TokenPair } from "@/types";
 import {
   createAccount,
-  createAccountCode,
-  resendCode,
-  verifyAccountCode,
-} from "../../api/auth";
+  resendSignupCode,
+  signup,
+  verifySignupCode,
+} from "@/api/auth";
 import { AuthCard } from "@/components/shared/AuthCard";
 import { PASSWORD_REGEXP } from "@/utils/constants";
 
@@ -85,7 +85,7 @@ const EmailForm = ({ successFn }: EmailFormProps) => {
   } = useForm<{ email: string }>();
   const { mutate } = useMutation(
     ({ email, captcha_token }: { email: string; captcha_token: string }) =>
-      createAccountCode(axios, { email, captcha_token }),
+      signup(axios, { email, captcha_token }),
     {
       onSuccess: (data) => {
         successFn(data.email);
@@ -170,7 +170,7 @@ const VerifyCodeForm = ({ email, successFn }: VerifyCodeProps) => {
 
   const verifyCodeMutation = useMutation(
     ({ code, captcha_token }: { code: string; captcha_token: string }) =>
-      verifyAccountCode(axios, { email, code, captcha_token }),
+      verifySignupCode(axios, { email, code, captcha_token }),
     {
       onSuccess: (data) => {
         successFn(data.code);
@@ -188,7 +188,8 @@ const VerifyCodeForm = ({ email, successFn }: VerifyCodeProps) => {
   );
 
   const resendCodeMutation = useMutation(
-    (captcha_token: string) => resendCode(axios, { email, captcha_token }),
+    (captcha_token: string) =>
+      resendSignupCode(axios, { email, captcha_token }),
     {
       onSuccess: () => {
         toast({

@@ -4,10 +4,8 @@ import axios from "axios";
 import { FcGoogle } from "react-icons/fc";
 import { useUser } from "@/hooks/useUser";
 import { TokenPair } from "@/types";
-import { BACKEND_URL } from "@/utils/constants";
-const exchangeData = async (code: string) => {
-  return axios.post(`${BACKEND_URL}/auth/google`, { code });
-};
+import { googleSignin } from "@/api/auth";
+
 const CLIENTID = process.env.NEXT_PUBLIC_GOOGLE_CLIENTID ?? "";
 
 export const GoogleSignin = () => {
@@ -24,7 +22,7 @@ const Signin = () => {
     flow: "auth-code",
     ux_mode: "popup",
     onSuccess: async (codeResponse) => {
-      const response = await exchangeData(codeResponse.code);
+      const response = await googleSignin(axios, codeResponse.code);
       const tokens: TokenPair = response.data;
       localStorage.setItem("access_token", tokens.access_token.token);
       localStorage.setItem("refresh_token", tokens.refresh_token.token);
