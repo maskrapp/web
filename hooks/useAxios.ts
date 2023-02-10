@@ -1,12 +1,8 @@
 import axios, { AxiosError, AxiosHeaders, AxiosResponse } from "axios";
 import { Token } from "@/types";
 import { BACKEND_URL } from "@/utils/constants";
+import { refreshAccessToken } from "@/api/token";
 
-const refreshAccessToken = async (refreshToken: string) => {
-  return axios.post(`${BACKEND_URL}/api/auth/refresh/`, {
-    refresh_token: refreshToken,
-  }) as Promise<AxiosResponse<Token, any>>;
-};
 
 const axiosInstance = axios.create({
   headers: {

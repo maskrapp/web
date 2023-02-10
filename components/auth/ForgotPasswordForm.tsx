@@ -24,11 +24,7 @@ import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import {
-  changePassword,
-  createPasswordCode,
-  verifyPasswordCode,
-} from "@/api/auth";
+import { changePassword, resetPassword, verifyPasswordCode } from "@/api/auth";
 import { APIResponse } from "@/types";
 import { PASSWORD_REGEXP } from "@/utils/constants";
 import { AuthCard } from "@/components/shared/AuthCard";
@@ -82,7 +78,7 @@ const StepOne = ({ successFn }: { successFn: (email: string) => void }) => {
 
   const { mutate, isLoading } = useMutation(
     ({ email, captcha_token }: { email: string; captcha_token: string }) =>
-      createPasswordCode(axios, { email, captcha_token }),
+      resetPassword(axios, { email, captcha_token }),
     {
       onSuccess: (data) => {
         successFn(data.email);
@@ -101,7 +97,7 @@ const StepOne = ({ successFn }: { successFn: (email: string) => void }) => {
       console.error("recaptcha is not available!");
       return;
     }
-    const captcha_token = await executeRecaptcha("create_password_code");
+    const captcha_token = await executeRecaptcha("reset_password");
     mutate({ email, captcha_token });
   };
   return (
@@ -185,7 +181,7 @@ const StepTwo = (
     isLoading: isCodeLoading,
   } = useMutation(
     ({ email, captcha_token }: { email: string; captcha_token: string }) =>
-      createPasswordCode(axios, { email, captcha_token }),
+      resetPassword(axios, { email, captcha_token }),
     {
       onSuccess: (_) => {},
       onError: (data: AxiosError) => {
@@ -204,7 +200,7 @@ const StepTwo = (
       console.error("recaptcha is not available!");
       return;
     }
-    const captcha_token = await executeRecaptcha("create_password_code");
+    const captcha_token = await executeRecaptcha("reset_password");
     codeMutate({ email, captcha_token });
   };
 
@@ -213,7 +209,7 @@ const StepTwo = (
       console.error("recaptcha is not available!");
       return;
     }
-    const captcha_token = await executeRecaptcha("verify_password_code");
+    const captcha_token = await executeRecaptcha("verify_password");
     mutate({ email, captcha_token, code });
   };
 
@@ -342,7 +338,7 @@ export const StepThree = ({ token }: { token: string }) => {
       console.error("recaptcha is not available!");
       return;
     }
-    const captcha_token = await executeRecaptcha("change_password");
+    const captcha_token = await executeRecaptcha("confirm_password");
     mutate({ password, token, captcha_token });
   };
   return (

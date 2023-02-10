@@ -17,25 +17,12 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosInstance } from "axios";
+import { AxiosError } from "axios";
 import { useRef, useState } from "react";
 import { useAxios } from "@/hooks/useAxios";
 import { APIResponse, Email } from "@/types";
-import { BACKEND_URL } from "@/utils/constants";
 import { verificationCodeSchema } from "@/utils/zod";
-
-const requestNewCode = (axios: AxiosInstance, email: string) => {
-  return axios.post(`${BACKEND_URL}/api/user/request-code`, {
-    email,
-  });
-};
-
-const verifyCode = (axios: AxiosInstance, email: string, code: string) => {
-  return axios.post(`${BACKEND_URL}/api/user/verify-email`, {
-    email,
-    code,
-  });
-};
+import { requestNewCode, verifyCode } from "@/api/email";
 
 interface Props {
   closeFn: () => void;

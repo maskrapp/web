@@ -1,12 +1,12 @@
 import { AxiosInstance } from "axios";
 import { BACKEND_URL } from "../utils/constants";
 
-export const createAccountCode = async (
+export const signup = async (
   axios: AxiosInstance,
   values: { email: string; captcha_token: string },
 ) => {
   const response = await axios.post(
-    `${BACKEND_URL}/auth/create-account-code`,
+    `${BACKEND_URL}/auth/signup`,
     values,
   );
   return { ...response, email: values.email };
@@ -21,20 +21,20 @@ export const createAccount = (
     captcha_token: string;
   },
 ) => {
-  return axios.post(`${BACKEND_URL}/auth/create-account`, values);
+  return axios.post(`${BACKEND_URL}/auth/signup/create`, values);
 };
 
-export const resendCode = (
+export const resendSignupCode = (
   axios: AxiosInstance,
   values: {
     email: string;
     captcha_token: string;
   },
 ) => {
-  return axios.post(`${BACKEND_URL}/auth/resend-account-code`, values);
+  return axios.post(`${BACKEND_URL}/auth/signup/resend`, values);
 };
 
-export const verifyAccountCode = async (
+export const verifySignupCode = async (
   axios: AxiosInstance,
   values: {
     email: string;
@@ -43,13 +43,20 @@ export const verifyAccountCode = async (
   },
 ) => {
   const response = await axios.post(
-    `${BACKEND_URL}/auth/verify-account-code`,
+    `${BACKEND_URL}/auth/signup/verify`,
     values,
   );
   return { ...response, code: values.code };
 };
 
-export const signInWithEmail = (
+export const googleSignin = (
+  axios: AxiosInstance,
+  code: string,
+) => {
+  return axios.post(`${BACKEND_URL}/auth/signin/google`, { code });
+};
+
+export const emailSignin = (
   axios: AxiosInstance,
   values: {
     email: string;
@@ -57,15 +64,15 @@ export const signInWithEmail = (
     captcha_token: string;
   },
 ) => {
-  return axios.post(`${BACKEND_URL}/auth/email-login`, values);
+  return axios.post(`${BACKEND_URL}/auth/signin/email`, values);
 };
 
-export const createPasswordCode = async (
+export const resetPassword = async (
   axios: AxiosInstance,
   values: { email: string; captcha_token: string },
 ) => {
   const response = await axios.post(
-    `${BACKEND_URL}/auth/create-password-code`,
+    `${BACKEND_URL}/auth/reset-password`,
     values,
   );
   return { ...response, email: values.email };
@@ -76,7 +83,7 @@ export const verifyPasswordCode = async (
   values: { email: string; code: string; captcha_token: string },
 ) => {
   const response = await axios.post(
-    `${BACKEND_URL}/auth/verify-password-code`,
+    `${BACKEND_URL}/auth/reset-password/verify`,
     values,
   );
   return { ...response, code: values.code };
@@ -86,5 +93,5 @@ export const changePassword = async (
   axios: AxiosInstance,
   values: { password: string; token: string; captcha_token: string },
 ) => {
-  return axios.post(`${BACKEND_URL}/auth/change-password`, values);
+  return axios.post(`${BACKEND_URL}/auth/reset-password/confirm`, values);
 };

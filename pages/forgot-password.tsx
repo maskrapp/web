@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 import { useUser } from "@/hooks/useUser";
+import Head from "next/head";
 
 const captchaKey = process.env.NEXT_PUBLIC_CAPTCHA_KEY ?? "";
 
@@ -25,17 +26,22 @@ const ForgotPasswordPage: NextPage = () => {
   if (!mounted) return null;
 
   return (
-    <GoogleReCaptchaProvider
-      reCaptchaKey={captchaKey}
-      scriptProps={{
-        appendTo: "head",
-      }}
-    >
-      <VStack minH={"100vh"} justify={"center"} spacing={8}>
-        <Heading fontSize={"4xl"}>Reset your password</Heading>
-        <ForgotPasswordForm />
-      </VStack>
-    </GoogleReCaptchaProvider>
+    <>
+      <Head>
+        <title>Forgot Password - Maskr</title>
+      </Head>
+      <GoogleReCaptchaProvider
+        reCaptchaKey={captchaKey}
+        scriptProps={{
+          appendTo: "head",
+        }}
+      >
+        <VStack minH={"100vh"} justify={"center"} spacing={8}>
+          <Heading fontSize={"4xl"}>Reset your password</Heading>
+          <ForgotPasswordForm />
+        </VStack>
+      </GoogleReCaptchaProvider>
+    </>
   );
 };
 export default ForgotPasswordPage;
