@@ -83,7 +83,7 @@ const EmailForm = ({ successFn }: EmailFormProps) => {
     setError,
     formState: { errors },
   } = useForm<{ email: string }>();
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     ({ email, captcha_token }: { email: string; captcha_token: string }) =>
       signup(axios, { email, captcha_token }),
     {
@@ -131,7 +131,7 @@ const EmailForm = ({ successFn }: EmailFormProps) => {
           <VStack spacing="2">
             <Button
               type="submit"
-              loadingText="Submitting"
+              isLoading={isLoading}
               w="100%"
               bg={"blue.400"}
               color={"white"}
@@ -237,7 +237,7 @@ const VerifyCodeForm = ({ email, successFn }: VerifyCodeProps) => {
           mt="5"
           type="submit"
           w="full"
-          loadingText="Submitting"
+          isLoading={verifyCodeMutation.isLoading}
           size="lg"
           bg={"blue.400"}
           color={"white"}
@@ -250,6 +250,7 @@ const VerifyCodeForm = ({ email, successFn }: VerifyCodeProps) => {
         <Button
           w="100%"
           mt="2.5"
+          isLoading={resendCodeMutation.isLoading}
           onClick={async () => {
             if (!executeRecaptcha) {
               console.error("recaptcha is not available!");
