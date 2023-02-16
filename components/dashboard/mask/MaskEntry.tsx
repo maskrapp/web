@@ -70,6 +70,7 @@ export const MaskEntry = ({ mask, email, enabled }: MaskEntryProps) => {
             <IconButton
               aria-label="Edit Mask"
               icon={<EditIcon />}
+              isDisabled={true}
             />
             <IconButton
               colorScheme="red"
