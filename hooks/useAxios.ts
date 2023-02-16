@@ -1,8 +1,7 @@
-import axios, { AxiosError, AxiosHeaders, AxiosResponse } from "axios";
+import axios, { AxiosHeaders, AxiosResponse, isAxiosError } from "axios";
 import { Token } from "@/types";
 import { BACKEND_URL } from "@/utils/constants";
 import { refreshAccessToken } from "@/api/token";
-
 
 const axiosInstance = axios.create({
   headers: {
@@ -30,38 +29,37 @@ axiosInstance.interceptors.response.use(
   },
   async (err) => {
     const originalConfig = err.config;
-    if (err.response) {
-      if (err.response.status === 401 && !originalConfig._retry) {
-        originalConfig._retry = true;
-        if (refreshPromise) {
-          // block if there's already a request being made to the refresh token endpoint
-          await refreshPromise;
-          return axiosInstance(originalConfig);
-        }
-        try {
-          refreshPromise = refreshAccessToken(
-            localStorage.getItem("refresh_token") ?? "invalid_token",
-          );
-          const rs = await refreshPromise;
-          const token = rs.data;
-          localStorage.setItem("access_token", token.token);
-          return axiosInstance(originalConfig);
-        } catch (_error: any) {
-          if (_error.name === "AxiosError") {
-            // log out if refresh token has expired
-            if ((_error as AxiosError).response?.status === 401) {
-              localStorage.removeItem("refresh_token");
-              localStorage.removeItem("access_token");
-              window.location.assign("/");
-            }
+    if (!err.response) {
+      return Promise.reject(err);
+    }
+    if (err.response.status === 401 && !originalConfig._retry) {
+      originalConfig._retry = true;
+      if (refreshPromise) {
+        // block if there's already a request being made to the refresh token endpoint
+        await refreshPromise;
+        return axiosInstance(originalConfig);
+      }
+      try {
+        const response = await (refreshPromise = refreshAccessToken(
+          localStorage.getItem("refresh_token") ?? "invalid_token",
+        ));
+        const token = response.data;
+        localStorage.setItem("access_token", token.token);
+        return axiosInstance(originalConfig);
+      } catch (_error: any) {
+        if (isAxiosError(_error)) {
+          // log out if refresh token has expired
+          if (_error.response?.status === 401) {
+            localStorage.removeItem("refresh_token");
+            localStorage.removeItem("access_token");
+            window.location.assign("/");
           }
-          return Promise.reject(_error);
-        } finally {
-          refreshPromise = null;
         }
+        return Promise.reject(_error);
+      } finally {
+        refreshPromise = null;
       }
     }
-    return Promise.reject(err);
   },
 );
 
