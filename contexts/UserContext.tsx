@@ -5,6 +5,7 @@ import { tokenSchema } from "@/utils/zod";
 import jwt_decode from "jwt-decode";
 
 interface UserContextType {
+  isLoading: boolean;
   isAuthenticated: boolean;
   accessToken: string | null;
   refreshToken: string | null;
@@ -21,16 +22,17 @@ export const UserContext = createContext<UserContextType | undefined>(
 );
 
 export const UserContextProvider = ({ children }: PropsWithChildren) => {
+  const [loading, setLoading] = useState(true);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [authenticated, setAuthenticated] = useState(false);
   const [provider, setProvider] = useState<string | null>(null);
 
   useEffect(() => {
-    const access_token = localStorage.getItem("access_token");
-    const refresh_token = localStorage.getItem("refresh_token");
-    if (!refresh_token || !access_token) return;
     try {
+      const access_token = localStorage.getItem("access_token");
+      const refresh_token = localStorage.getItem("refresh_token");
+      if (!refresh_token || !access_token) return;
       const accessTokenResult = tokenSchema.safeParse(access_token);
       const refreshTokenResult = tokenSchema.safeParse(refresh_token);
       if (accessTokenResult.success && refreshTokenResult.success) {
@@ -42,10 +44,13 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   const value: UserContextType = {
+    isLoading: loading,
     isAuthenticated: authenticated,
     accessToken: accessToken,
     refreshToken: refreshToken,

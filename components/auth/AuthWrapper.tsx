@@ -1,24 +1,16 @@
 import { useRouter } from "next/router";
-import { PropsWithChildren, useEffect, useState } from "react";
-import { useUser } from "@/hooks/useUser";
+import { PropsWithChildren } from "react";
+import { useUser } from "../../hooks/useUser";
 
 export const AuthWrapper = ({ children }: PropsWithChildren) => {
-  const [mounted, setMounted] = useState(false);
+  const { isLoading, isAuthenticated } = useUser();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  if (isLoading) return null;
 
-  const { isAuthenticated } = useUser();
-
-  if (mounted) {
-    if (isAuthenticated) {
-      return <>{children}</>;
-    }
-
-    return <ForceSignin />;
+  if (isAuthenticated) {
+    return <>{children}</>;
   }
-  return null;
+  return <ForceSignin />;
 };
 
 const ForceSignin = () => {
