@@ -1,6 +1,5 @@
 import {
   Heading,
-  Link,
   Link as ChakraLink,
   Stack,
   Text,
@@ -11,6 +10,7 @@ import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import { SignUpForm } from "@/components/auth/SignupForm";
 import Head from "next/head";
 import { UnauthenticatedGuard } from "@/components/auth/guards/UnauthenticatedGuard";
+import Link from "next/link";
 
 const captchaKey = process.env.NEXT_PUBLIC_CAPTCHA_KEY ?? "";
 
