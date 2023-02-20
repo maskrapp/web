@@ -1,13 +1,13 @@
 import { Box } from "@chakra-ui/react";
 import { NextPage } from "next";
-import { AuthWrapper } from "@/components/auth/AuthWrapper";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { Emails } from "@/components/dashboard/email/Emails";
 import Head from "next/head";
+import { AuthenticatedGuard } from "@/components/auth/guards/AuthenticatedGuard";
 
 const EmailPage: NextPage = () => {
   return (
-    <AuthWrapper>
+    <AuthenticatedGuard>
       <Head>
         <title>Emails - Maskr</title>
       </Head>
@@ -21,7 +21,7 @@ const EmailPage: NextPage = () => {
       >
         <Emails />
       </Box>
-    </AuthWrapper>
+    </AuthenticatedGuard>
   );
 };
 

@@ -1,32 +1,15 @@
 import { Heading, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
-import { useUser } from "@/hooks/useUser";
 import Head from "next/head";
+import { UnauthenticatedGuard } from "@/components/auth/guards/UnauthenticatedGuard";
 
 const captchaKey = process.env.NEXT_PUBLIC_CAPTCHA_KEY ?? "";
 
 const ForgotPasswordPage: NextPage = () => {
-  const { isAuthenticated } = useUser();
-  const [mounted, setMounted] = useState(false);
-  const router = useRouter();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (isAuthenticated) {
-    router.push("/");
-    return null;
-  }
-
-  if (!mounted) return null;
-
   return (
-    <>
+    <UnauthenticatedGuard>
       <Head>
         <title>Forgot Password - Maskr</title>
       </Head>
@@ -41,7 +24,7 @@ const ForgotPasswordPage: NextPage = () => {
           <ForgotPasswordForm />
         </VStack>
       </GoogleReCaptchaProvider>
-    </>
+    </UnauthenticatedGuard>
   );
 };
 export default ForgotPasswordPage;

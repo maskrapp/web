@@ -1,13 +1,13 @@
 import { Box } from "@chakra-ui/react";
 import { NextPage } from "next";
-import { AuthWrapper } from "@/components/auth/AuthWrapper";
 import { DashboardHeader } from "../components/dashboard/DashboardHeader";
 import { Masks } from "@/components/dashboard/mask/Masks";
 import { MaskStats } from "@/components/dashboard/mask/MaskStats";
+import { AuthenticatedGuard } from "@/components/auth/guards/AuthenticatedGuard";
 
 const Index: NextPage = () => {
   return (
-    <AuthWrapper>
+    <AuthenticatedGuard>
       <DashboardHeader />
       <Box
         margin="auto"
@@ -19,7 +19,7 @@ const Index: NextPage = () => {
         <MaskStats />
         <Masks />
       </Box>
-    </AuthWrapper>
+    </AuthenticatedGuard>
   );
 };
 
