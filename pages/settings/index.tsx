@@ -1,13 +1,13 @@
 import { Box } from "@chakra-ui/react";
 import { NextPage } from "next";
-import { AuthWrapper } from "@/components/auth/AuthWrapper";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { SettingsCard } from "@/components/dashboard/settings/SettingsCard";
 import Head from "next/head";
+import { AuthenticatedGuard } from "@/components/auth/guards/AuthenticatedGuard";
 
 const Settings: NextPage = () => {
   return (
-    <AuthWrapper>
+    <AuthenticatedGuard>
       <Head>
         <title>Settings - Maskr</title>
       </Head>
@@ -21,7 +21,7 @@ const Settings: NextPage = () => {
       >
         <SettingsCard />
       </Box>
-    </AuthWrapper>
+    </AuthenticatedGuard>
   );
 };
 export default Settings;
