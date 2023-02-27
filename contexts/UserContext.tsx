@@ -36,11 +36,16 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
       const accessTokenResult = tokenSchema.safeParse(access_token);
       const refreshTokenResult = tokenSchema.safeParse(refresh_token);
       if (accessTokenResult.success && refreshTokenResult.success) {
-        const decoded = jwt_decode<{ provider: string }>(refresh_token);
-        setRefreshToken(refresh_token);
-        setAccessToken(access_token);
-        setProvider(decoded.provider);
-        setAuthenticated(true);
+        const decoded = jwt_decode<{ provider: string; exp: number }>(
+          refresh_token,
+        );
+        const hasExpired = Date.now() / 1000 > decoded.exp;
+        if (!hasExpired) {
+          setRefreshToken(refresh_token);
+          setAccessToken(access_token);
+          setProvider(decoded.provider);
+          setAuthenticated(true);
+        }
       }
     } catch (error) {
       console.error(error);
