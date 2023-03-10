@@ -10,6 +10,7 @@ const Index: NextPage = () => {
     <AuthenticatedGuard>
       <DashboardHeader />
       <Box
+        px="3"
         margin="auto"
         boxSize={{
           md: "4xl",

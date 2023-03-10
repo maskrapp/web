@@ -13,6 +13,7 @@ const EmailPage: NextPage = () => {
       </Head>
       <DashboardHeader />
       <Box
+        px="3"
         margin="auto"
         boxSize={{
           md: "4xl",
