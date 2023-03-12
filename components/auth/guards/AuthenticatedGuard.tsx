@@ -1,8 +1,12 @@
 import { useUser } from "@/hooks/useUser";
 import { useRouter } from "next/router";
-import { PropsWithChildren } from "react";
+import { ReactNode } from "react";
 
-export const AuthenticatedGuard = ({ children }: PropsWithChildren) => {
+interface Props {
+  children: ReactNode;
+}
+
+export const AuthenticatedGuard = ({ children }: Props) => {
   const { isLoading, isAuthenticated } = useUser();
   const router = useRouter();
 
