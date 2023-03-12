@@ -48,6 +48,7 @@ const NavItem = ({ item }: { item: SettingsItem }) => {
       <ChakraLink
         fontWeight="medium"
         color={selected ? "rgb(102, 184, 255)" : undefined}
+        _hover={{ textDecorationLine: "none" }}
       >
         {name}
       </ChakraLink>
