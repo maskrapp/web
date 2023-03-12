@@ -24,7 +24,9 @@ const items: SettingsItem[] = [
 ];
 
 export const SettingsNavigation = () => {
-  const [isLarger] = useMediaQuery("(min-width: 768px)");
+  const [isLarger] = useMediaQuery("(min-width: 768px)", {
+    ssr: false,
+  });
   if (isLarger) {
     return (
       <Flex direction="column" gap="3">
