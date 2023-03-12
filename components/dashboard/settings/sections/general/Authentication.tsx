@@ -13,7 +13,9 @@ export const AuthSection = () => {
   const { provider } = useUser();
   const isDisabled = provider !== "email";
   const axios = useAxios();
-  const { data } = useQuery(["accountdetails"], () => accountDetails(axios));
+  const { data } = useQuery(["accountdetails"], () => accountDetails(axios), {
+    cacheTime: 3600,
+  });
   return (
     <SettingsSection name="Authentication">
       <SettingsSubsection name="Email">
