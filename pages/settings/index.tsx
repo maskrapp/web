@@ -1,9 +1,10 @@
-import { Box } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
-import { SettingsCard } from "@/components/dashboard/settings/SettingsCard";
 import Head from "next/head";
 import { AuthenticatedGuard } from "@/components/auth/guards/AuthenticatedGuard";
+import { SettingsLayout } from "@/components/dashboard/settings/SettingsLayout";
+import { AuthSection } from "@/components/dashboard/settings/sections/general/Authentication";
+import { AccountRemovalSection } from "@/components/dashboard/settings/sections/general/AccountRemoval";
 
 const Settings: NextPage = () => {
   return (
@@ -12,15 +13,10 @@ const Settings: NextPage = () => {
         <title>Settings - Maskr</title>
       </Head>
       <DashboardHeader />
-      <Box
-        margin="auto"
-        boxSize={{
-          md: "4xl",
-          base: "100%",
-        }}
-      >
-        <SettingsCard />
-      </Box>
+      <SettingsLayout>
+        <AuthSection />
+        <AccountRemovalSection />
+      </SettingsLayout>
     </AuthenticatedGuard>
   );
 };
