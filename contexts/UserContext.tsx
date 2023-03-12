@@ -1,6 +1,6 @@
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 
-import { TokenPair } from "../types";
+import { AuthProvider, TokenPair } from "../types";
 import { tokenSchema } from "@/utils/zod";
 import jwt_decode from "jwt-decode";
 
@@ -9,7 +9,7 @@ interface UserContextType {
   isAuthenticated: boolean;
   accessToken: string | null;
   refreshToken: string | null;
-  provider: string | null;
+  provider: AuthProvider | null;
   actions: {
     setAccessToken: (token: string) => void;
     setRefreshToken: (token: string) => void;
@@ -18,7 +18,7 @@ interface UserContextType {
 }
 
 export const UserContext = createContext<UserContextType | undefined>(
-  undefined,
+  undefined
 );
 
 export const UserContextProvider = ({ children }: PropsWithChildren) => {
@@ -26,7 +26,7 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [authenticated, setAuthenticated] = useState(false);
-  const [provider, setProvider] = useState<string | null>(null);
+  const [provider, setProvider] = useState<AuthProvider | null>(null);
 
   useEffect(() => {
     try {
@@ -37,13 +37,13 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
       const refreshTokenResult = tokenSchema.safeParse(refresh_token);
       if (accessTokenResult.success && refreshTokenResult.success) {
         const decoded = jwt_decode<{ provider: string; exp: number }>(
-          refresh_token,
+          refresh_token
         );
         const hasExpired = Date.now() / 1000 > decoded.exp;
         if (!hasExpired) {
           setRefreshToken(refresh_token);
           setAccessToken(access_token);
-          setProvider(decoded.provider);
+          setProvider(decoded.provider as AuthProvider);
           setAuthenticated(true);
         }
       }
@@ -71,7 +71,7 @@ export const UserContextProvider = ({ children }: PropsWithChildren) => {
         setRefreshToken(pair.refresh_token.token);
         setAccessToken(pair.access_token.token);
         setAuthenticated(true);
-        setProvider(pair.refresh_token.provider);
+        setProvider(pair.refresh_token.provider as AuthProvider);
       },
     },
   };

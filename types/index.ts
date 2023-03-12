@@ -36,3 +36,5 @@ export interface Domain {
   domain: string;
   free: boolean;
 }
+
+export type AuthProvider = "email" | "google";
