@@ -24,7 +24,9 @@ import { JSXElementConstructor, ReactElement } from "react";
 export const Logo = () => {
   return (
     <HStack>
-      <Text fontSize={"md"} fontWeight="700">Maskr</Text>
+      <Text fontSize={"md"} fontWeight="700">
+        Maskr
+      </Text>
       <Badge colorScheme="blue">Alpha</Badge>
     </HStack>
   );
@@ -107,18 +109,16 @@ interface NavItemProps {
 const NavItem = ({ name, href, icon }: NavItemProps) => {
   const selected = window.location.pathname === href;
   return (
-    <Link href={href}>
-      <Button
-        as={ChakraLink}
-        leftIcon={icon}
-        variant="ghost"
-        rounded="sm"
-        href={"#"}
-        _hover={{ textDecoration: "none", bgColor: "whiteAlpha.200" }}
-        borderBottom={selected ? "2px solid" : undefined}
-      >
-        {name}
-      </Button>
-    </Link>
+    <Button
+      as={Link}
+      leftIcon={icon}
+      variant="ghost"
+      rounded="sm"
+      href={href}
+      _hover={{ textDecoration: "none", bgColor: "whiteAlpha.200" }}
+      borderBottom={selected ? "2px solid" : undefined}
+    >
+      {name}
+    </Button>
   );
 };

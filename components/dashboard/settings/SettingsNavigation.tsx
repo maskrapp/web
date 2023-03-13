@@ -44,15 +44,15 @@ const NavItem = ({ item }: { item: SettingsItem }) => {
   const router = useRouter();
   const selected = router.pathname == href;
   return (
-    <Link href={href} passHref={true}>
-      <ChakraLink
-        fontWeight="medium"
-        color={selected ? "rgb(102, 184, 255)" : undefined}
-        _hover={{ textDecorationLine: "none" }}
-      >
-        {name}
-      </ChakraLink>
-    </Link>
+    <ChakraLink
+      as={Link}
+      href={href}
+      fontWeight="medium"
+      color={selected ? "rgb(102, 184, 255)" : undefined}
+      _hover={{ textDecorationLine: "none" }}
+    >
+      {name}
+    </ChakraLink>
   );
 };
 
