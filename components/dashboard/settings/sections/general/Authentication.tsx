@@ -22,7 +22,7 @@ export const AuthSection = () => {
             isReadOnly
             type="email"
             paddingRight="2.5rem"
-            value={data?.email}
+            defaultValue={data?.email}
           />
           <InputRightElement width="2.5rem">
             <Button variant="ghost" isDisabled={isDisabled}>
