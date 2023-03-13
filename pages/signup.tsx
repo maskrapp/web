@@ -31,9 +31,9 @@ const SignUpPage: NextPage = () => {
             <Heading fontSize={"4xl"}>Create an account</Heading>
             <Text fontSize={"lg"} color={"gray.600"}>
               Already have an account?{" "}
-              <Link href="/signin">
-                <ChakraLink color={"blue.400"}>Sign in here</ChakraLink>
-              </Link>
+              <ChakraLink as={Link} href="signin" color={"blue.400"}>
+                Sign in here
+              </ChakraLink>
             </Text>
           </Stack>
           <SignUpForm />

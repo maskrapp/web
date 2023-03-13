@@ -116,11 +116,14 @@ const StepOne = ({ successFn }: { successFn: (email: string) => void }) => {
             {errors.email?.message}
           </FormErrorMessage>
         </FormControl>
-        <Link href="signin">
-          <ChakraLink color="blue.400" fontWeight="semibold">
-            I remember my password
-          </ChakraLink>
-        </Link>
+        <ChakraLink
+          as={Link}
+          href="/signin"
+          color="blue.400"
+          fontWeight="semibold"
+        >
+          I remember my password
+        </ChakraLink>
         <Button
           my="5"
           type="submit"
