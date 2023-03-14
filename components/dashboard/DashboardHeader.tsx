@@ -9,7 +9,6 @@ import {
   Container,
   Flex,
   HStack,
-  Link as ChakraLink,
   Menu,
   MenuButton,
   MenuItem,
@@ -33,8 +32,8 @@ export const Logo = () => {
 };
 
 export const DashboardHeader = () => {
-  const { mutateAsync } = useMutation(async () =>
-    revokeRefreshToken(localStorage.getItem("refresh_token") ?? "")
+  const { mutateAsync } = useMutation(async (token: string) =>
+    revokeRefreshToken(token)
   );
   return (
     <Box
@@ -72,10 +71,12 @@ export const DashboardHeader = () => {
                 <MenuItem
                   color="red.400"
                   onClick={async () => {
-                    await mutateAsync();
+                    await mutateAsync(
+                      localStorage.getItem("refresh_token") as string
+                    );
                     localStorage.removeItem("access_token");
                     localStorage.removeItem("refresh_token");
-                    window.location.assign("/");
+                    window.location.assign("/signin");
                   }}
                 >
                   Sign out
