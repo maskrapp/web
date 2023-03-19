@@ -15,7 +15,7 @@ axiosInstance.interceptors.request.use((config) => {
   if (access_token) {
     (config.headers as AxiosHeaders).set(
       "Authorization",
-      `Bearer ${access_token}`,
+      `Bearer ${access_token}`
     );
   }
   return config;
@@ -41,7 +41,7 @@ axiosInstance.interceptors.response.use(
       }
       try {
         const response = await (refreshPromise = refreshAccessToken(
-          localStorage.getItem("refresh_token") ?? "invalid_token",
+          localStorage.getItem("refresh_token") ?? "invalid_token"
         ));
         const token = response.data;
         localStorage.setItem("access_token", token.token);
@@ -60,7 +60,8 @@ axiosInstance.interceptors.response.use(
         refreshPromise = null;
       }
     }
-  },
+    return Promise.reject(err);
+  }
 );
 
 export const useAxios = () => {
